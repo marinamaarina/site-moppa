@@ -1,0 +1,493 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Moppa: suas encomendas organizadas, do pedido à produção. Experimente em 2 minutos.">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>Conheça o Moppa</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: página de celular aberta pelo cartão NFC. A pessoa experimenta o Moppa em 3 etapas (cliente → empresa → preço) e termina pedindo orçamento. Paleta Moppa, só tema claro por escolha. */
+:root{
+  --petroleo:#0f4c5c; --terracota:#c76e4b; --areia:#e8dcc6; --verde:#2e5d4b; --grafite:#2b2b2b;
+  --fundo:#f3eee6; --cinza:#686765; --branco:#fbf8f3; --erro-bg:#f6dcd6; --erro:#9b2c1f;
+  --display:"Jost",system-ui,sans-serif; --mono:"DM Mono",ui-monospace,monospace;
+  color-scheme:light;
+}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+body{background:var(--fundo);color:var(--grafite);font-family:var(--display);font-size:16px;line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+*{box-sizing:border-box}
+button{font:inherit;cursor:pointer;border:0;color:inherit;background:none}
+button[disabled]{opacity:.45;cursor:default}
+a{color:var(--petroleo)}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--terracota);outline-offset:2px}
+.wrap{max-width:480px;margin:0 auto;display:flex;flex-direction:column;gap:52px;padding-block:16px 40px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--petroleo);margin:0}
+h1{font-size:clamp(34px,10vw,44px);line-height:1.04;font-weight:600;letter-spacing:-.02em;margin:0;text-wrap:balance}
+h2{font-size:28px;line-height:1.12;font-weight:600;letter-spacing:-.01em;margin:6px 0 0;text-wrap:balance}
+h3{font-size:18px;line-height:1.25;font-weight:600;margin:0}
+p{margin:0}
+.lead{color:var(--cinza);font-size:17px}
+.sub{color:var(--cinza);font-size:15px}
+.bloco{display:flex;flex-direction:column;gap:16px;scroll-margin-top:16px}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;min-height:52px;border-radius:999px;padding:0 20px;font-weight:600;font-size:16px;text-decoration:none;width:100%;text-align:center}
+.btn.p{background:var(--petroleo);color:var(--fundo)}
+.btn.t{background:var(--terracota);color:#fff}
+.btn.c{background:transparent;color:var(--petroleo);border:1.5px solid var(--petroleo)}
+.btn.v{background:var(--verde);color:#fff}
+.topo{display:flex;align-items:center;justify-content:space-between}
+.marca{display:flex;align-items:center;gap:8px;font-weight:600;font-size:18px;color:var(--petroleo)}
+.topo a{font-size:14px;font-weight:500}
+
+/* Etapas */
+.etapas{display:flex;gap:6px}
+.etapas span{flex:1;height:5px;border-radius:999px;background:var(--areia);transition:background .3s}
+.etapas span.on{background:var(--petroleo)}
+.num{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--petroleo);color:var(--fundo);font-family:var(--mono);font-size:13px;margin-right:8px;vertical-align:2px}
+
+/* Hero */
+/* Cena de abertura: bagunça → pedido organizado */
+.cena{background:var(--petroleo);border-radius:28px;position:relative;overflow:hidden;height:320px;color:var(--fundo)}
+.cena .q1{position:absolute;right:-90px;top:-90px;width:220px;height:220px;border-radius:50%;background:var(--terracota)}
+.cena .q2{position:absolute;right:-30px;top:-30px;width:110px;height:110px;border-radius:50%;background:var(--areia)}
+.bol{position:absolute;left:50%;top:46%;transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y)));background:#fff;color:var(--grafite);
+  border-radius:14px 14px 14px 4px;padding:6px 11px 7px;font-size:13px;white-space:nowrap;box-shadow:0 6px 16px -8px rgba(0,0,0,.5);opacity:0}
+.bol i{display:block;font-style:normal;font-size:10px;font-weight:600;color:var(--terracota);text-transform:uppercase;letter-spacing:.04em}
+.b1{--x:-72px;--y:-92px}.b2{--x:66px;--y:-52px;transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) rotate(3deg)}
+.b3{--x:-64px;--y:-8px}.b4{--x:70px;--y:36px}.b5{--x:-36px;--y:80px}
+.ped{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);width:min(270px,80%);background:var(--fundo);color:var(--grafite);border-radius:18px;padding:14px 16px;
+  display:flex;flex-direction:column;gap:3px;font-size:13px;box-shadow:0 18px 30px -16px rgba(0,0,0,.6);opacity:0}
+.ped b{font-size:17px;font-weight:600;color:var(--petroleo)}
+.ped span{color:var(--cinza)}
+.ped-top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px}
+.ped .ped-n{font-family:var(--mono);font-size:12px;color:var(--petroleo)}
+.ped .ped-ok{font-size:11px;font-weight:600;background:#dde8e1;color:var(--verde);padding:3px 9px;border-radius:999px}
+.legenda{position:absolute;left:16px;right:16px;bottom:16px;text-align:center;font-size:14px;font-weight:500;color:var(--areia);opacity:0}
+.legenda.l2{color:#fff}
+.rever{position:absolute;right:12px;bottom:12px;width:36px;height:36px;border-radius:50%;background:rgba(243,238,230,.16);color:var(--fundo);font-size:18px;opacity:0}
+/* estado final (sem animação) */
+.cena .ped,.cena .l2,.cena .rever{opacity:1}
+.cena .bol,.cena .l1{opacity:0}
+.cena.play .bol{animation:bEntra .45s ease-out both,bJunta .7s 2.9s ease-in forwards}
+.cena.play .b1{animation-delay:.3s,2.9s}.cena.play .b2{animation-delay:.7s,2.9s}.cena.play .b3{animation-delay:1.1s,2.9s}
+.cena.play .b4{animation-delay:1.5s,2.9s}.cena.play .b5{animation-delay:1.9s,2.9s}
+.cena.play .l1{animation:leg1 3.2s .2s both}
+.cena.play .ped{animation:pedIn .6s 3.5s cubic-bezier(.2,1.3,.4,1) both}
+.cena.play .l2{animation:fade .5s 4.1s both}
+.cena.play .rever{animation:fade .4s 4.6s both}
+@keyframes bEntra{from{opacity:0;transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y) + 16px)) scale(.85)}to{opacity:1;transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) scale(1)}}
+@keyframes bJunta{from{opacity:1;transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) scale(1)}to{opacity:0;transform:translate(-50%,-50%) scale(.25)}}
+@keyframes leg1{0%{opacity:0}12%{opacity:1}85%{opacity:1}100%{opacity:0}}
+@keyframes pedIn{from{opacity:0;transform:translate(-50%,-50%) scale(.7)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.acoes{display:flex;flex-direction:column;gap:10px}
+
+/* Segmentos */
+.opc{display:flex;flex-wrap:wrap;gap:8px}
+.opc label{position:relative}
+.opc input{position:absolute;opacity:0;pointer-events:none}
+.opc span{display:inline-flex;align-items:center;min-height:42px;padding:0 14px;border-radius:999px;border:1.5px solid var(--areia);background:#fff;font-size:14px;cursor:pointer}
+.opc input:checked+span{background:var(--petroleo);border-color:var(--petroleo);color:var(--fundo)}
+.opc input:focus-visible+span{outline:3px solid var(--terracota);outline-offset:2px}
+
+/* Celular com reels */
+.fone{background:var(--grafite);border-radius:36px;padding:10px;width:min(300px,100%);align-self:center;box-shadow:0 24px 40px -28px rgba(15,76,92,.6)}
+.reels{height:440px;overflow-y:auto;scroll-snap-type:y mandatory;border-radius:28px;scrollbar-width:none;overscroll-behavior:contain;position:relative}
+.reels::-webkit-scrollbar{display:none}
+.reel{height:100%;scroll-snap-align:start;scroll-snap-stop:always;position:relative;display:flex;flex-direction:column;justify-content:flex-end;padding:18px 16px;color:#fff;gap:6px;overflow:hidden}
+.reel::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 40%,rgba(10,14,12,.78) 100%)}
+.reel>*{position:relative}
+.reel .forma{position:absolute;left:50%;top:34%;transform:translate(-50%,-50%);width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,.18);box-shadow:inset 0 0 0 18px rgba(255,255,255,.08)}
+.reel .forma::after{content:"";position:absolute;inset:34px;border-radius:50%;background:rgba(255,255,255,.22)}
+.reel .topinho{position:absolute;top:14px;left:16px;right:16px;display:flex;justify-content:space-between;font-size:12px}
+.reel .loja{display:flex;align-items:center;gap:6px;font-weight:600}
+.reel .loja i{width:22px;height:22px;border-radius:50%;background:var(--fundo);color:var(--petroleo);display:grid;place-items:center;font-style:normal;font-size:11px}
+.reel .cont{font-family:var(--mono)}
+.reel .tag{align-self:flex-start;font-size:11px;font-weight:600;background:var(--fundo);color:var(--petroleo);padding:3px 9px;border-radius:999px}
+.reel b{font-size:22px;line-height:1.1;font-weight:600}
+.reel .desc{font-size:13px;opacity:.9}
+.reel .linha{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:4px}
+.reel .preco{font-size:15px;font-weight:600}
+.reel .preco small{font-weight:400;opacity:.85;font-size:12px}
+.reel .preco.mudou{animation:pisca 1s ease 2}
+@keyframes pisca{50%{color:#ffd9a8}}
+.add{min-height:40px;border-radius:999px;padding:0 14px;background:var(--fundo);color:var(--petroleo);font-weight:600;font-size:13px;white-space:nowrap}
+.add.ok{background:var(--terracota);color:#fff}
+.dica{position:absolute;top:44px;left:50%;transform:translateX(-50%);font-size:11px;background:rgba(10,14,12,.5);padding:4px 10px;border-radius:999px;white-space:nowrap}
+.sacola{background:var(--branco);border:1px solid var(--areia);border-radius:20px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.sacola .it{display:flex;justify-content:space-between;gap:10px;font-size:14px;font-variant-numeric:tabular-nums}
+.sacola .tot{display:flex;justify-content:space-between;border-top:1px dashed var(--areia);padding-top:8px;font-weight:600;font-variant-numeric:tabular-nums}
+.vazio{font-size:14px;color:var(--cinza);text-align:center;padding:6px}
+
+/* Painel */
+.painel{background:var(--branco);border:1px solid var(--areia);border-radius:24px;overflow:hidden}
+.painel .barra{background:var(--petroleo);color:var(--fundo);padding:12px 16px;display:flex;justify-content:space-between;align-items:center;font-size:14px}
+.painel .barra b{font-weight:600}
+.painel .corpo{padding:16px;display:flex;flex-direction:column;gap:14px}
+.notif{display:flex;gap:10px;align-items:center;background:#fff;border:1px solid var(--areia);border-radius:14px;padding:10px 12px;animation:cai .5s cubic-bezier(.2,1.3,.4,1) both}
+@keyframes cai{from{opacity:.001;transform:translateY(-16px)}to{opacity:1;transform:none}}
+.notif .ic{width:30px;height:30px;border-radius:9px;background:var(--terracota);flex:none}
+.notif small{display:block;color:var(--cinza);font-size:12px}
+.cab{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.cod{font-family:var(--mono);font-size:14px;color:var(--petroleo)}
+.pill{font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;white-space:nowrap}
+.pill.solicitado{background:#e1ebee;color:var(--petroleo)}
+.pill.enviado{background:#efe4cf;color:#6b5220}
+.pill.alteracao{background:var(--erro-bg);color:var(--erro)}
+.pill.aprovado{background:#dde8e1;color:var(--verde)}
+.pill.producao{background:var(--petroleo);color:var(--fundo)}
+.itens{display:flex;flex-direction:column;gap:6px;font-size:14px}
+.itens div{display:flex;justify-content:space-between;gap:10px;font-variant-numeric:tabular-nums}
+.itens .mud{background:#fff3e6;border-radius:6px;padding:2px 6px;margin:0 -6px}
+.meta{display:flex;gap:6px;flex-wrap:wrap}
+.meta span{font-family:var(--mono);font-size:11px;color:var(--cinza);background:var(--fundo);padding:3px 8px;border-radius:6px}
+.vers{display:flex;gap:6px;flex-wrap:wrap}
+.vers button{font-family:var(--mono);font-size:12px;padding:5px 10px;border-radius:8px;background:var(--fundo);color:var(--cinza);min-height:32px}
+.vers button.on{background:var(--petroleo);color:#fff}
+.hist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--cinza)}
+.hist li{display:flex;gap:8px}
+.hist time{font-family:var(--mono);font-size:11px;min-width:42px;padding-top:2px}
+.lado{font-size:12px;font-family:var(--mono);color:var(--cinza);text-transform:uppercase;letter-spacing:.06em;margin-bottom:-6px}
+.botoes{display:flex;flex-direction:column;gap:8px}
+.fechou{background:#dde8e1;color:var(--verde);border-radius:14px;padding:12px 14px;font-size:14px}
+
+/* Preço */
+.preco-box{background:var(--branco);border:1px solid var(--areia);border-radius:24px;padding:16px;display:flex;flex-direction:column;gap:14px}
+.ajuste{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.ajuste .val{font-family:var(--mono);font-size:26px;color:var(--petroleo);font-variant-numeric:tabular-nums}
+.ajuste button{width:48px;height:48px;border-radius:50%;background:var(--fundo);border:1.5px solid var(--areia);font-size:22px;font-weight:600;color:var(--petroleo)}
+.compara{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.compara div{border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:2px}
+.compara .a{background:var(--fundo)}
+.compara .b{background:#dde8e1}
+.compara small{font-size:12px;color:var(--cinza)}
+.compara b{font-family:var(--mono);font-size:20px;font-weight:500;font-variant-numeric:tabular-nums}
+select,input[type=text],input[type=tel],textarea{font:inherit;font-size:16px;min-height:50px;border-radius:14px;border:1px solid var(--areia);background:#fff;padding:0 14px;color:var(--grafite);width:100%}
+textarea{padding:12px 14px;min-height:88px;resize:vertical}
+
+/* Fechamento */
+.comeco{display:flex;flex-direction:column;gap:10px}
+.comeco div{border-top:3px solid var(--terracota);padding-top:10px;display:flex;flex-direction:column;gap:2px}
+.comeco p{color:var(--cinza);font-size:15px}
+.form{background:var(--branco);border:1px solid var(--areia);border-radius:26px;padding:20px;display:flex;flex-direction:column;gap:16px}
+.campo{display:flex;flex-direction:column;gap:6px}
+.campo>label,.campo>.rot{font-size:14px;font-weight:500}
+.campo .dica2{font-size:12px;color:var(--cinza)}
+.erro{font-size:13px;color:var(--erro)}
+.invalido{border-color:var(--erro)!important;background:var(--erro-bg)!important}
+.pronto{background:var(--petroleo);color:var(--fundo);border-radius:26px;padding:22px;display:flex;flex-direction:column;gap:14px;animation:cai .4s ease both}
+.pronto .msg{background:var(--fundo);color:var(--grafite);border-radius:16px;padding:14px;font-size:14px;white-space:pre-wrap}
+.pronto .btn.c{color:var(--fundo);border-color:var(--areia)}
+.pronto small{color:var(--areia);font-size:13px}
+.toast{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--grafite);color:var(--fundo);padding:10px 16px;border-radius:999px;font-size:14px;max-width:calc(100% - 32px);text-align:center;animation:cai .3s ease both;z-index:20}
+footer{text-align:center;font-size:13px;color:var(--cinza);display:flex;flex-direction:column;gap:4px}
+</style>
+
+<div class="wrap">
+  <header class="topo">
+    <span class="marca"><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><rect width="26" height="26" rx="8" fill="#0f4c5c"/><path d="M26 10 A16 16 0 0 0 10 26 L26 26Z" fill="#c76e4b"/></svg>moppa</span>
+    <a href="#orc">Pedir orçamento</a>
+  </header>
+
+  <section class="bloco" aria-labelledby="h-hero">
+    <div class="cena play" id="cena" role="img" aria-label="Animação: mensagens soltas de WhatsApp, áudio e Instagram se juntam e viram um pedido organizado no Moppa">
+      <span class="q1"></span><span class="q2"></span>
+      <span class="bol b1"><i>WhatsApp</i>🎤 Áudio · 1:34</span>
+      <span class="bol b2"><i>Instagram</i>Quanto fica o cento?</span>
+      <span class="bol b3"><i>Maria</i>Muda pra 3 kg!</span>
+      <span class="bol b4"><i>Telefone</i>Anotado no caderno</span>
+      <span class="bol b5"><i>Maria</i>Confirma sábado?</span>
+      <span class="legenda l1">Hoje: pedido chegando de todo jeito…</span>
+      <div class="ped">
+        <div class="ped-top"><span class="ped-n">Pedido nº 0148</span><span class="ped-ok">✓ Aprovado</span></div>
+        <b>Maria · Centro</b>
+        <span>Bolo de ninho com morango · 3 kg</span>
+        <span>Retirada sábado, 7h · R$ 270,00</span>
+      </div>
+      <span class="legenda l2">Com o Moppa: tudo num pedido só.</span>
+      <button class="rever" id="rever" type="button" aria-label="Ver a animação de novo">↻</button>
+    </div>
+    <p class="eyebrow">O que é o Moppa</p>
+    <h1 id="h-hero">Suas encomendas organizadas, do pedido à produção.</h1>
+    <p class="lead">Seu cliente escolhe pelo celular, num cardápio em vídeo. Você recebe o pedido completo e com o preço certo num painel. Sem áudio perdido, sem pedido trocado.</p>
+    <div class="acoes"><a class="btn p" href="#e1">Experimente em 2 minutos</a><p class="sub" style="text-align:center;font-size:13px">Sem cadastro. Você faz um pedido de teste e vê ele chegar.</p></div>
+  </section>
+
+  <div class="etapas" id="etapas" aria-hidden="true"><span class="on"></span><span></span><span></span></div>
+
+  <!-- Etapa 1 -->
+  <section class="bloco" id="e1" aria-labelledby="h-e1">
+    <div><p class="eyebrow"><span class="num">1</span>Você é o cliente</p><h2 id="h-e1">Escolha pelo vídeo e monte a sacola</h2></div>
+    <p class="sub">Primeiro, que tipo de negócio é o seu? O cardápio muda.</p>
+    <div class="opc" role="radiogroup" aria-label="Tipo de negócio" id="segs"></div>
+    <div class="fone"><div class="reels" id="reels" aria-label="Cardápio em vídeo, deslize para cima"></div></div>
+    <div class="sacola" id="sacola"></div>
+  </section>
+
+  <!-- Etapa 2 -->
+  <section class="bloco" id="e2" aria-labelledby="h-e2">
+    <div><p class="eyebrow"><span class="num">2</span>Agora você é a empresa</p><h2 id="h-e2">O pedido chega no seu painel</h2></div>
+    <p class="sub">Toque nos botões para levar o pedido até a produção. Os do cliente simulam o que ele faria pelo link.</p>
+    <div class="painel" id="painel"></div>
+  </section>
+
+  <!-- Etapa 3 -->
+  <section class="bloco" id="e3" aria-labelledby="h-e3">
+    <div><p class="eyebrow"><span class="num">3</span>Seu preço manda</p><h2 id="h-e3">Mude um preço e veja o que acontece</h2></div>
+    <p class="sub">O cardápio atualiza na hora. O pedido que já foi feito guarda o preço da época.</p>
+    <div class="preco-box" id="precoBox"></div>
+  </section>
+
+  <section class="bloco" aria-labelledby="h-com">
+    <div><p class="eyebrow">Para ter no seu negócio</p><h2 id="h-com">Você não precisa entender de sistema</h2></div>
+    <div class="comeco">
+      <div><h3>Montamos seu cardápio com você</h3><p>Produtos, preços e unidades: un, cento ou kg.</p></div>
+      <div><h3>Você grava os vídeos pelo celular</h3><p>Na vertical, de 5 a 8 segundos. O Moppa deixa leve.</p></div>
+      <div><h3>Divulgue o link</h3><p>QR no balcão, cartão NFC, bio do Instagram e status do WhatsApp.</p></div>
+    </div>
+  </section>
+
+  <section class="bloco" id="orc" aria-labelledby="h-orc">
+    <div><p class="eyebrow">Orçamento</p><h2 id="h-orc">Peça o orçamento do Moppa para o seu negócio</h2></div>
+    <p class="sub">Já deixamos marcado o que você experimentou. A proposta chega no seu WhatsApp.</p>
+    <form class="form" id="form" novalidate>
+      <div class="campo"><label for="nome">Seu nome</label><input id="nome" type="text" autocomplete="name"></div>
+      <div class="campo"><label for="negocio">Nome do negócio</label><input id="negocio" type="text" autocomplete="organization"></div>
+      <div class="campo"><span class="rot" id="r-seg2">Tipo de negócio</span><div class="opc" role="radiogroup" aria-labelledby="r-seg2" id="segs2"></div></div>
+      <div class="campo"><label for="volume">Encomendas por semana</label>
+        <select id="volume"><option>Até 10</option><option selected>De 10 a 30</option><option>De 30 a 80</option><option>Mais de 80</option><option>Não sei dizer</option></select></div>
+      <div class="campo"><span class="rot" id="r-int">O que mais interessa</span><span class="dica2">Marque quantos quiser.</span>
+        <div class="opc" role="group" aria-labelledby="r-int">
+          <label><input type="checkbox" name="int" value="Cardápio em vídeo" id="i-card"><span>Cardápio em vídeo</span></label>
+          <label><input type="checkbox" name="int" value="Organizar orçamentos" id="i-orc"><span>Organizar orçamentos</span></label>
+          <label><input type="checkbox" name="int" value="Alterações com versão" id="i-ver"><span>Alterações com versão</span></label>
+          <label><input type="checkbox" name="int" value="Preço sempre certo" id="i-pre"><span>Preço sempre certo</span></label>
+          <label><input type="checkbox" name="int" value="QR/cartão no balcão"><span>QR/cartão no balcão</span></label>
+        </div></div>
+      <div class="campo"><label for="cidade">Cidade</label><input id="cidade" type="text" autocomplete="address-level2"></div>
+      <div class="campo"><label for="zap">Seu WhatsApp</label><input id="zap" type="tel" inputmode="tel" autocomplete="tel" placeholder="(34) 9 0000-0000"></div>
+      <div class="campo"><label for="obs">Quer contar algo? <span class="dica2">(opcional)</span></label><textarea id="obs" placeholder="Ex.: hoje recebo tudo pelo WhatsApp e me perco nos áudios"></textarea></div>
+      <p class="erro" id="erro" role="alert" hidden></p>
+      <button class="btn t" type="submit">Montar meu pedido de orçamento</button>
+    </form>
+    <div id="pronto" hidden></div>
+  </section>
+
+  <footer>
+    <span class="marca" style="justify-content:center"><svg width="20" height="20" viewBox="0 0 26 26" aria-hidden="true"><rect width="26" height="26" rx="8" fill="#0f4c5c"/><path d="M26 10 A16 16 0 0 0 10 26 L26 26Z" fill="#c76e4b"/></svg>moppa</span>
+    <span>Conte. Calcule. Conquiste.</span>
+  </footer>
+</div>
+
+<script>
+const WHATSAPP = ""; // número do Moppa com DDI e DDD, ex.: "5534999999999"
+const WHATSAPP_EXIBIR = "[(34) 9 ____-____]";
+
+const CARDAPIOS = {
+  Padaria:{loja:"Padaria Bom Grão",itens:[
+    {id:"pao",nome:"Pão de fermentação natural",desc:"Sai do forno às 7h e às 16h.",preco:18,un:"un",tag:"Mais pedido",cor:["#c48a4a","#6e3f1d"]},
+    {id:"cox",nome:"Coxinha de festa",desc:"Frango com catupiry, massa leve.",preco:95,un:"cento",tag:"Encomenda 48h",cor:["#e3a24a","#8a4a16"]},
+    {id:"pdq",nome:"Pão de queijo",desc:"Congelado, pronto para assar.",preco:48,un:"kg",tag:"Mineiro",cor:["#e9c56a","#a1702a"]},
+    {id:"bolo",nome:"Bolo de cenoura",desc:"Cobertura de brigadeiro.",preco:62,un:"un",tag:"Para festa",cor:["#e07b3c","#4a2516"]}]},
+  Confeitaria:{loja:"Doce Ateliê",itens:[
+    {id:"ninho",nome:"Bolo ninho com morango",desc:"Massa branca, recheio cremoso.",preco:90,un:"kg",tag:"Mais pedido",cor:["#e9b7b0","#9a4a52"]},
+    {id:"brig",nome:"Brigadeiro gourmet",desc:"Chocolate belga, forminha 4.",preco:210,un:"cento",tag:"Encomenda 72h",cor:["#8a5a3c","#3a2216"]},
+    {id:"torta",nome:"Torta holandesa",desc:"Serve 12 fatias.",preco:95,un:"un",tag:"Fim de semana",cor:["#d9b48a","#5c3a21"]},
+    {id:"pers",nome:"Bolo personalizado",desc:"Tema e tamanho do seu jeito.",preco:null,un:"un",tag:"Sob consulta",cor:["#b9a7d6","#4e3f6e"]}]},
+  Buffet:{loja:"Buffet Alegria",itens:[
+    {id:"jard",nome:"Decoração Jardim Encantado",desc:"Painel, mesa e arranjos.",preco:1800,un:"un",tag:"Tema",cor:["#9fc3a0","#2e5d4b"]},
+    {id:"doce",nome:"Mesa de doces · 100 pessoas",desc:"8 tipos de doce.",preco:950,un:"un",tag:"Mais pedido",cor:["#e9b7b0","#8a3a4a"]},
+    {id:"salg",nome:"Kit salgados · 100 pessoas",desc:"Coxinha, risole, kibe e mais.",preco:680,un:"un",tag:"Pacote",cor:["#e3a24a","#8a4a16"]},
+    {id:"pers2",nome:"Tema personalizado",desc:"Você escolhe, a gente cria.",preco:null,un:"un",tag:"Sob consulta",cor:["#8fb3c9","#0f4c5c"]}]}
+};
+
+const s = {seg:"Padaria", sacola:{}, precos:{}, pedido:null, verVersao:null, etapa:1, provou:{card:0,orc:0,ver:0,pre:0}};
+const $ = id => document.getElementById(id);
+const brl = v => v.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+const unTxt = u => u==="cento"?"o cento":u==="kg"?"o kg":"a unidade";
+const reduz = matchMedia("(prefers-reduced-motion:reduce)").matches;
+const prods = () => CARDAPIOS[s.seg].itens;
+const preco = p => p.preco==null ? null : (s.precos[p.id] ?? p.preco);
+const agora = () => new Date().toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
+function toast(t){const el=document.createElement("div");el.className="toast";el.setAttribute("role","status");el.textContent=t;document.body.appendChild(el);setTimeout(()=>el.remove(),2600)}
+function etapa(n){s.etapa=Math.max(s.etapa,n);[...$("etapas").children].forEach((e,i)=>e.classList.toggle("on",i<s.etapa))}
+function ir(id){$(id).scrollIntoView({behavior:reduz?"auto":"smooth",block:"start"})}
+
+/* Segmentos */
+function renderSegs(){
+  ["segs","segs2"].forEach(alvo=>{
+    $(alvo).innerHTML=["Padaria","Confeitaria","Buffet","Outro"].filter(x=>alvo==="segs2"||x!=="Outro").map(x=>
+      `<label><input type="radio" name="${alvo}" value="${x}" ${s.seg===x?"checked":""}><span>${x}</span></label>`).join("");
+  });
+  $("segs").querySelectorAll("input").forEach(i=>i.onchange=()=>{
+    if(s.pedido && s.pedido.status!=="producao" && !confirmTroca()) {renderSegs();return}
+    s.seg=i.value; s.sacola={}; renderSegs(); renderReels(); renderSacola(); renderPreco();
+    $("reels").scrollTop=0;
+  });
+}
+function confirmTroca(){ s.pedido=null; renderPainel(); return true; }
+
+/* Reels */
+function renderReels(){
+  const c=CARDAPIOS[s.seg], L=c.itens;
+  $("reels").innerHTML=L.map((p,i)=>`
+    <article class="reel" style="background:radial-gradient(circle at 50% 30%, ${p.cor[0]}, ${p.cor[1]})">
+      <span class="forma" aria-hidden="true"></span>
+      <div class="topinho"><span class="loja"><i>${c.loja[0]}</i>${c.loja}</span><span class="cont">${i+1}/${L.length}</span></div>
+      ${i===0?`<span class="dica">deslize para cima ↑</span>`:""}
+      <span class="tag">${p.tag}</span>
+      <b>${p.nome}</b>
+      <span class="desc">${p.desc}</span>
+      <div class="linha">
+        <span class="preco" id="pr-${p.id}">${preco(p)==null?"Sob consulta":`${brl(preco(p))} <small>${unTxt(p.un)}</small>`}</span>
+        <button class="add ${s.sacola[p.id]?"ok":""}" data-add="${p.id}" aria-label="Adicionar ${p.nome}">${s.sacola[p.id]?`✓ ${s.sacola[p.id]}`:"+ Adicionar"}</button>
+      </div>
+    </article>`).join("");
+  $("reels").querySelectorAll("[data-add]").forEach(b=>b.onclick=()=>{
+    const id=b.dataset.add; s.sacola[id]=(s.sacola[id]||0)+1;
+    b.classList.add("ok"); b.textContent=`✓ ${s.sacola[id]}`; renderSacola();
+    const r=$("reels"), idx=L.findIndex(p=>p.id===id);
+    if(s.sacola[id]===1 && idx<L.length-1) setTimeout(()=>r.scrollTo({top:r.clientHeight*(idx+1),behavior:reduz?"auto":"smooth"}),400);
+  });
+}
+
+function itensSacola(){return prods().filter(p=>s.sacola[p.id]).map(p=>({id:p.id,nome:p.nome,un:p.un,q:s.sacola[p.id],unit:preco(p)}))}
+const totalDe = it => it.reduce((t,i)=>t+(i.unit?i.unit*i.q:0),0);
+
+function renderSacola(){
+  const it=itensSacola();
+  $("sacola").innerHTML = it.length ? `
+    ${it.map(i=>`<div class="it"><span>${i.q}× ${i.nome}</span><span>${i.unit?brl(i.unit*i.q):"a definir"}</span></div>`).join("")}
+    <div class="tot"><span>Total estimado</span><span>${brl(totalDe(it))}</span></div>
+    <button class="btn p" id="enviar">Enviar pedido para ${CARDAPIOS[s.seg].loja}</button>` :
+    `<p class="vazio">Toque em “+ Adicionar” nos produtos do celular acima.</p>`;
+  const e=$("enviar"); if(e) e.onclick=enviarPedido;
+}
+
+/* Pedido */
+function enviarPedido(){
+  const it=itensSacola();
+  s.pedido={codigo:"ORC-2026-0148",status:"solicitado",loja:CARDAPIOS[s.seg].loja,versoes:[{itens:it,quando:agora(),nota:"Pedido pelo cardápio"}],hist:[{t:agora(),txt:"Chegou pelo cardápio. Preços puxados da tabela."}]};
+  s.verVersao=0; s.sacola={}; s.provou.card=1;
+  renderReels(); renderSacola(); renderPainel(); renderPreco(); etapa(2);
+  toast("Pedido enviado. Agora veja o lado da empresa.");
+  setTimeout(()=>ir("e2"),reduz?0:500);
+}
+
+const ROT={solicitado:"Solicitado",enviado:"Proposta enviada",alteracao:"Alteração pedida",aprovado:"Aprovado",producao:"Em produção"};
+function renderPainel(){
+  const P=s.pedido;
+  if(!P){$("painel").innerHTML=`<div class="barra"><b>Painel · Orçamentos</b><span>0 novos</span></div><div class="corpo"><p class="vazio">Monte uma sacola na etapa 1 e envie. O pedido aparece aqui.</p></div>`;return}
+  const vi=s.verVersao??P.versoes.length-1, V=P.versoes[vi], ant=P.versoes[vi-1];
+  const mudou=id=>ant && (ant.itens.find(x=>x.id===id)?.q!==V.itens.find(x=>x.id===id)?.q);
+  const cod = P.status==="producao" ? "PED-2026-0148" : P.codigo;
+  let acoes="";
+  if(P.status==="solicitado") acoes=`<p class="lado">Você (empresa)</p><button class="btn p" data-a="enviar">Conferir e enviar proposta</button>`;
+  else if(P.status==="enviado") acoes=`<p class="lado">O cliente, pelo link</p><button class="btn v" data-a="aprovar">Cliente aprova</button><button class="btn c" data-a="alterar">Cliente pede alteração</button>`;
+  else if(P.status==="alteracao") acoes=`<p class="lado">Você (empresa)</p><button class="btn p" data-a="v2">Criar nova versão e reenviar</button>`;
+  else if(P.status==="aprovado") acoes=`<p class="lado">Você (empresa)</p><button class="btn p" data-a="produzir">Gerar pedido de produção</button>`;
+  else acoes=`<div class="fechou">Ciclo completo: do cardápio à produção, com um código só. Agora, a etapa 3.</div><a class="btn c" href="#e3">Ir para a etapa 3</a>`;
+  $("painel").innerHTML=`
+    <div class="barra"><b>Painel · ${P.loja}</b><span>${P.status==="solicitado"?"1 novo":"Orçamentos"}</span></div>
+    <div class="corpo">
+      ${P.status==="solicitado"?`<div class="notif"><span class="ic" aria-hidden="true"></span><div><b>Nova solicitação pelo cardápio</b><small>${V.itens.length} ${V.itens.length>1?"itens":"item"} · ${P.versoes[0].quando}</small></div></div>`:""}
+      <div class="cab"><span class="cod">${cod}</span><span class="pill ${P.status}">${ROT[P.status]}</span></div>
+      <div class="meta"><span>canal: cardápio</span><span>versão ${vi+1} de ${P.versoes.length}</span></div>
+      ${P.versoes.length>1?`<div class="vers" role="group" aria-label="Versões">${P.versoes.map((x,i)=>`<button data-v="${i}" class="${i===vi?"on":""}" aria-pressed="${i===vi}">v${i+1}</button>`).join("")}</div>`:""}
+      <div class="itens">${V.itens.map(i=>`<div class="${mudou(i.id)?"mud":""}"><span>${i.q}× ${i.nome}</span><span>${i.unit?brl(i.unit*i.q):"a definir"}</span></div>`).join("")}
+        <div style="border-top:1px dashed var(--areia);padding-top:6px;font-weight:600"><span>Total v${vi+1}</span><span>${brl(totalDe(V.itens))}</span></div></div>
+      <ul class="hist" aria-label="Histórico">${P.hist.map(h=>`<li><time>${h.t}</time><span>${h.txt}</span></li>`).join("")}</ul>
+      <div class="botoes">${acoes}</div>
+    </div>`;
+  $("painel").querySelectorAll("[data-v]").forEach(b=>b.onclick=()=>{s.verVersao=+b.dataset.v;renderPainel()});
+  $("painel").querySelectorAll("[data-a]").forEach(b=>b.onclick=()=>acao(b.dataset.a));
+}
+function acao(a){
+  const P=s.pedido, last=P.versoes[P.versoes.length-1];
+  if(a==="enviar"){P.status="enviado";P.hist.push({t:agora(),txt:`Proposta v${P.versoes.length} enviada ao cliente por link.`});s.provou.orc=1;}
+  if(a==="alterar"){P.status="alteracao";P.hist.push({t:agora(),txt:`Cliente pediu: “aumenta 1 no ${last.itens[0].nome.toLowerCase()}”.`});}
+  if(a==="v2"){const it=last.itens.map((x,i)=>i===0?{...x,q:x.q+1}:{...x});P.versoes.push({itens:it,quando:agora()});P.status="enviado";s.verVersao=null;s.provou.ver=1;
+    P.hist.push({t:agora(),txt:`Versão ${P.versoes.length} criada no mesmo código e reenviada.`});}
+  if(a==="aprovar"){P.status="aprovado";P.hist.push({t:agora(),txt:`Cliente aprovou a versão ${P.versoes.length} pelo link.`});}
+  if(a==="produzir"){P.status="producao";P.hist.push({t:agora(),txt:"Virou PED-2026-0148. A cozinha produz a versão aprovada."});etapa(3);toast("Pedido de produção gerado.");}
+  renderPainel(); renderPreco(); marcarInteresses();
+}
+
+/* Preço */
+function renderPreco(){
+  const lista=prods().filter(p=>p.preco!=null);
+  if(!s.alvoPreco || !lista.find(p=>p.id===s.alvoPreco)) s.alvoPreco = (s.pedido && s.pedido.versoes.at(-1).itens.find(i=>i.unit)?.id) || lista[0].id;
+  const p=lista.find(x=>x.id===s.alvoPreco), atual=preco(p);
+  const noPed = s.pedido?.versoes.at(-1).itens.find(i=>i.id===p.id);
+  const passo = atual>=500?50:atual>=100?5:1;
+  $("precoBox").innerHTML=`
+    <div class="campo"><label for="alvo">Produto</label><select id="alvo">${lista.map(x=>`<option value="${x.id}" ${x.id===p.id?"selected":""}>${x.nome}</option>`).join("")}</select></div>
+    <div class="ajuste">
+      <button data-d="-1" aria-label="Diminuir preço">−</button>
+      <div style="text-align:center"><span class="val">${brl(atual)}</span><br><span class="sub" style="font-size:13px">${unTxt(p.un)} na sua tabela</span></div>
+      <button data-d="1" aria-label="Aumentar preço">+</button>
+    </div>
+    <div class="compara">
+      <div class="b"><small>No cardápio, agora</small><b>${brl(atual)}</b></div>
+      <div class="a"><small>${noPed?`No ${s.pedido.status==="producao"?"PED":"ORC"}-2026-0148`:"Pedido já feito"}</small><b>${noPed?brl(noPed.unit):"—"}</b><small>${noPed?(noPed.unit!==atual?"preço da época, mantido":"mesmo preço"):"envie um pedido com este item"}</small></div>
+    </div>
+    <button class="btn c" id="verCard">Ver no cardápio</button>`;
+  $("alvo").onchange=e=>{s.alvoPreco=e.target.value;renderPreco()};
+  $("precoBox").querySelectorAll("[data-d]").forEach(b=>b.onclick=()=>{
+    s.precos[p.id]=Math.max(passo,atual+(+b.dataset.d)*passo); s.provou.pre=1; marcarInteresses();
+    renderPreco(); const el=$("pr-"+p.id); if(el){el.innerHTML=`${brl(preco(p))} <small>${unTxt(p.un)}</small>`;el.classList.remove("mudou");void el.offsetWidth;el.classList.add("mudou")}
+  });
+  $("verCard").onclick=()=>{const idx=prods().findIndex(x=>x.id===p.id);ir("e1");setTimeout(()=>$("reels").scrollTo({top:$("reels").clientHeight*idx}),reduz?0:450)};
+}
+
+/* Orçamento */
+function marcarInteresses(){
+  [["card","i-card"],["orc","i-orc"],["ver","i-ver"],["pre","i-pre"]].forEach(([k,id])=>{if(s.provou[k]&&!$(id).dataset.mexeu)$(id).checked=true});
+}
+document.querySelectorAll("[name=int]").forEach(i=>i.addEventListener("change",()=>i.dataset.mexeu=1));
+
+const CH="moppa-orc-rascunho";
+try{const r=JSON.parse(localStorage.getItem(CH)||"{}");["nome","negocio","cidade","zap","obs"].forEach(k=>{if(r[k])$(k).value=r[k]})}catch(e){}
+$("form").addEventListener("input",()=>{try{localStorage.setItem(CH,JSON.stringify(Object.fromEntries(["nome","negocio","cidade","zap","obs"].map(k=>[k,$(k).value]))))}catch(e){}});
+
+$("form").addEventListener("submit",e=>{
+  e.preventDefault();
+  const v=id=>$(id).value.trim(), falta=[];
+  [["nome","seu nome"],["negocio","o nome do negócio"],["zap","seu WhatsApp com DDD"]].forEach(([id,txt])=>{
+    const ok=id==="zap"?v(id).replace(/\D/g,"").length>=10:!!v(id);
+    $(id).classList.toggle("invalido",!ok);$(id).setAttribute("aria-invalid",String(!ok));if(!ok)falta.push(txt)});
+  if(falta.length){$("erro").textContent="Falta preencher "+falta.join(", ").replace(/, ([^,]*)$/," e $1")+".";$("erro").hidden=false;
+    $(["nome","negocio","zap"].find(i=>$(i).classList.contains("invalido"))).focus();return}
+  $("erro").hidden=true;
+  const seg=document.querySelector("[name=segs2]:checked")?.value||s.seg;
+  const ints=[...document.querySelectorAll("[name=int]:checked")].map(i=>i.value);
+  const testou = s.pedido ? `Testei a demo: pedido no cardápio${s.provou.ver?", alteração com nova versão":""}${s.pedido.status==="producao"?" e geração do pedido de produção":""}.` : null;
+  const msg=["Olá! Quero um orçamento do Moppa.","","Nome: "+v("nome"),"Negócio: "+v("negocio")+" ("+seg+")",
+    v("cidade")?"Cidade: "+v("cidade"):null,"Encomendas por semana: "+v("volume"),ints.length?"Interesse: "+ints.join(", "):null,
+    "WhatsApp: "+v("zap"),testou,v("obs")?"\n"+v("obs"):null].filter(x=>x!==null).join("\n");
+  const link="https://wa.me/"+WHATSAPP+"?text="+encodeURIComponent(msg);
+  $("pronto").innerHTML=`<div class="pronto">
+    <p class="eyebrow" style="color:var(--areia)">Pedido de orçamento pronto</p>
+    <h3 style="font-size:22px">Falta só enviar, ${v("nome").split(" ")[0]}.</h3>
+    <div class="msg" id="msg-txt"></div>
+    <a class="btn t" href="${link}" target="_blank" rel="noopener">Enviar pelo WhatsApp</a>
+    <button class="btn c" type="button" id="copiar">Copiar mensagem</button>
+    <small>Se o WhatsApp não abrir, copie a mensagem e mande para ${WHATSAPP_EXIBIR}.</small></div>`;
+  $("msg-txt").textContent=msg; $("pronto").hidden=false; $("form").hidden=true; $("pronto").scrollIntoView({block:"start"});
+  $("copiar").onclick=async ev=>{const b=ev.currentTarget;try{await navigator.clipboard.writeText(msg);b.textContent="Mensagem copiada"}
+    catch(err){const r=document.createRange();r.selectNodeContents($("msg-txt"));const sel=getSelection();sel.removeAllRanges();sel.addRange(r);b.textContent="Texto selecionado: copie pelo menu"}};
+});
+document.querySelector('a[href="#e1"]').addEventListener("click",()=>etapa(1));
+
+$("rever").onclick=()=>{const c=$("cena");c.classList.remove("play");void c.offsetWidth;c.classList.add("play")};
+renderSegs(); renderReels(); renderSacola(); renderPainel(); renderPreco();
+</script>
+
+</body>
+</html>
