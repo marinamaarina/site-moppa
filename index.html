@@ -1,0 +1,439 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Moppa · Encomendas organizadas</title>
+<meta name="description" content="Cardápio em vídeo, orçamento pelo WhatsApp e um painel com todos os pedidos. Para padarias, confeitarias e buffets.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Moppa">
+<meta property="og:title" content="Moppa: suas encomendas organizadas, do pedido à produção">
+<meta property="og:description" content="Cardápio em vídeo, orçamento pelo WhatsApp e um painel com todos os pedidos. Para padarias, confeitarias e buffets.">
+<meta property="og:url" content="https://site-moppa.vercel.app/">
+<meta property="og:image" content="https://site-moppa.vercel.app/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="pt_BR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0f4c5c">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1024 1024'%3E%3Crect width='1024' height='1024' rx='228' fill='%231E322A'/%3E%3Cg transform='matrix(0.76607 0 0 0.76607 181.17 284.31)'%3E%3Cpath d='M625 229.4 L781 100.8 Q797 83.6 797 103.6 L797 562 A60 60 0 0 1 737 622 L685 622 A60 60 0 0 1 625 562 Z' fill='%23F3EEE6'/%3E%3Cpath d='M66 97 A62 62 0 0 1 128 35 L170 35 C205 35 228 51 250 66 L418 178 L418 262 C395 232 360 212 320 212 C272 212 236 240 235 300 L235 562 A60 60 0 0 1 175 622 L126 622 A60 60 0 0 1 66 562 Z' fill='%23F3EEE6'/%3E%3Cpath d='M418 180 L645.9 -8.1 A85 85 0 0 1 754.1 123.1 L418 400 Z' fill='%23C76E4B'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap">
+<style>
+/* Landing do Moppa: hero com o vídeo no celular, faixas alternando creme / petróleo / areia, conteúdo em largura de 1180px. */
+:root{
+  --petroleo:#0f4c5c; --terracota:#c76e4b; --areia:#e8dcc6; --verde:#2e5d4b; --grafite:#2b2b2b;
+  --fundo:#f3eee6; --cinza:#686765; --branco:#fbf8f3;
+  --display:"Jost",system-ui,-apple-system,"Segoe UI",sans-serif; --mono:"DM Mono",ui-monospace,Menlo,monospace;
+  color-scheme:light;
+}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--fundo);color:var(--grafite);font-family:var(--display);font-size:17px;line-height:1.55;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+img,video{max-width:100%;display:block}
+a{color:var(--petroleo)}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var(--terracota);outline-offset:3px}
+p{margin:0}
+h1,h2,h3{margin:0;text-wrap:balance;letter-spacing:-.015em}
+.faixa{padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px));padding-block:72px}
+.conteudo{max-width:1180px;margin:0 auto}
+.eyebrow{font-family:var(--mono);font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--petroleo)}
+.titulo{font-size:clamp(32px,4.4vw,48px);line-height:1.08;font-weight:600}
+.lead{font-size:clamp(17px,1.6vw,20px);color:var(--cinza);max-width:56ch}
+.cab-secao{display:flex;flex-direction:column;gap:12px;margin-bottom:40px;max-width:760px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:56px;padding:0 28px;border-radius:999px;font-weight:600;font-size:17px;text-decoration:none;border:0;cursor:pointer;font-family:inherit}
+.btn.p{background:var(--terracota);color:#fff}
+.btn.p:hover{background:#b65f3d}
+.btn.c{background:transparent;color:var(--petroleo);box-shadow:inset 0 0 0 1.5px var(--petroleo)}
+.btn.c:hover{background:rgba(15,76,92,.06)}
+.btn.claro{background:var(--fundo);color:var(--petroleo)}
+.btn svg{width:22px;height:22px}
+
+/* Topo */
+.topo{position:sticky;top:0;z-index:20;background:rgba(243,238,230,.92);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--areia);
+  padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--fundo);z-index:21}
+.topo .conteudo{display:flex;align-items:center;justify-content:space-between;gap:20px;min-height:72px}
+.logo{display:inline-flex;line-height:0}
+.logo svg{height:32px;width:auto;overflow:visible}
+.menu{display:flex;align-items:center;gap:28px}
+.menu a{text-decoration:none;font-weight:500;font-size:15px;color:var(--grafite)}
+.menu a:hover{color:var(--petroleo)}
+.menu .btn{min-height:44px;padding:0 20px;font-size:15px;color:#fff}
+@media (max-width:860px){.menu a:not(.btn){display:none}}
+
+/* Hero */
+.hero{padding-block:56px 72px}
+.hero .conteudo{display:grid;grid-template-columns:1fr;gap:48px;align-items:center}
+.hero-txt{display:flex;flex-direction:column;gap:22px}
+.hero h1{font-size:clamp(40px,6vw,68px);line-height:1.02;font-weight:600}
+.hero .acoes{display:flex;flex-wrap:wrap;gap:12px}
+.hero .prova{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:15px;color:var(--cinza)}
+.hero .prova span{display:inline-flex;align-items:center;gap:8px}
+.hero .prova span::before{content:"";width:18px;height:18px;border-radius:50%;flex:none;background:var(--verde) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5 10.5l3.2 3L15 7' fill='none' stroke='white' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/18px no-repeat}
+.palco{position:relative;display:flex;justify-content:center;padding:24px 0}
+.palco::before{content:"";position:absolute;inset:8% 4% 0;border-radius:40px;background:var(--petroleo)}
+.palco .q1{position:absolute;right:4%;top:8%;width:180px;height:180px;border-radius:0 40px 0 100%;background:var(--terracota)}
+.palco .q2{position:absolute;right:4%;top:8%;width:90px;height:90px;border-radius:0 40px 0 100%;background:var(--areia)}
+.fone{position:relative;width:min(320px,78vw);aspect-ratio:9/16;background:#222;border-radius:40px;padding:10px;box-shadow:0 40px 60px -30px rgba(10,30,36,.7)}
+.fone video{width:100%;height:100%;object-fit:cover;border-radius:31px;background:var(--petroleo)}
+@media (min-width:960px){
+  .hero .conteudo{grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:64px}
+  .fone{width:340px}
+}
+
+/* Dor */
+.dor{background:var(--petroleo);color:var(--fundo)}
+.dor .eyebrow{color:var(--areia)}
+.dor .lead{color:var(--areia)}
+.bolhas{display:flex;flex-wrap:wrap;gap:12px}
+.bolha{background:#fff;color:var(--grafite);border-radius:18px 18px 18px 6px;padding:10px 16px 12px;font-size:17px;box-shadow:0 10px 20px -14px rgba(0,0,0,.6)}
+.bolha i{display:block;font-style:normal;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--terracota)}
+.dor-grid{display:grid;gap:40px}
+.custos{display:grid;gap:12px}
+.custo{border-top:1px solid rgba(232,220,198,.3);padding-top:14px;display:flex;flex-direction:column;gap:4px}
+.custo b{font-size:20px;font-weight:600;color:#fff}
+.custo span{color:var(--areia)}
+@media (min-width:960px){.dor-grid{grid-template-columns:1fr 1fr;align-items:start}}
+
+/* Como funciona */
+.pilares{display:grid;gap:20px}
+.pilar{background:var(--branco);border:1px solid var(--areia);border-radius:28px;padding:28px;display:flex;flex-direction:column;gap:14px}
+.pilar .n{font-family:var(--mono);font-size:14px;color:var(--terracota)}
+.pilar h3{font-size:26px;line-height:1.15;font-weight:600;color:var(--petroleo)}
+.pilar p{color:var(--cinza)}
+.mini{margin-top:auto;background:var(--fundo);border-radius:18px;padding:14px;display:flex;flex-direction:column;gap:8px;font-size:14px}
+.mini .lin{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.msg{max-width:85%;padding:8px 12px;border-radius:14px 14px 14px 4px;background:#fff;font-size:14px}
+.msg.eu{align-self:flex-end;background:#d6eade;border-radius:14px 14px 4px 14px}
+.pill{font-size:12px;font-weight:600;padding:3px 10px;border-radius:999px;white-space:nowrap}
+.pill.sol{background:#e1ebee;color:var(--petroleo)}
+.pill.env{background:#efe4cf;color:#6b5220}
+.pill.apr{background:#dde8e1;color:var(--verde)}
+.pill.ped{background:var(--petroleo);color:var(--fundo)}
+.cod{font-family:var(--mono);font-size:13px;color:var(--petroleo)}
+.reel{border-radius:14px;padding:14px;min-height:120px;display:flex;flex-direction:column;justify-content:flex-end;gap:4px;color:#fff;background:linear-gradient(180deg,#e3a24a,#8a4a16 70%,#3a2410)}
+.reel b{font-size:17px;line-height:1.15}
+.reel .lin span{font-size:13px}
+.reel .add{background:var(--fundo);color:var(--petroleo);font-weight:600;font-size:12px;padding:5px 12px;border-radius:999px}
+@media (min-width:960px){.pilares{grid-template-columns:repeat(3,1fr)}}
+
+/* Vídeos */
+.videos{background:var(--areia)}
+.abas{display:inline-flex;gap:6px;padding:6px;border-radius:999px;background:var(--fundo);margin-bottom:24px}
+.abas button{font:inherit;font-weight:600;font-size:15px;border:0;cursor:pointer;min-height:44px;padding:0 20px;border-radius:999px;background:transparent;color:var(--cinza)}
+.abas button[aria-selected=true]{background:var(--petroleo);color:var(--fundo)}
+.tela-video{border-radius:28px;overflow:hidden;background:var(--petroleo);box-shadow:0 30px 60px -36px rgba(10,30,36,.7)}
+.tela-video video{width:100%;aspect-ratio:16/9;object-fit:cover}
+.tela-video video.vert{display:none;aspect-ratio:9/16;max-height:80vh;margin:0 auto}
+@media (max-width:640px){.tela-video video.hor{display:none}.tela-video video.vert{display:block}}
+.nota-video{font-size:14px;color:#5b5a58;margin-top:12px}
+
+/* História */
+.historia-grid{display:grid;gap:32px;align-items:center}
+.pedido{background:var(--branco);border:1px solid var(--areia);border-radius:28px;padding:24px;display:flex;flex-direction:column;gap:14px;max-width:520px}
+.pedido .topo-ped{display:flex;justify-content:space-between;gap:10px;align-items:center}
+.versao{border-radius:18px;padding:16px 18px;display:flex;flex-direction:column;gap:2px}
+.versao small{font-family:var(--mono);font-size:12px;letter-spacing:.06em}
+.versao b{font-size:20px;font-weight:600}
+.versao.antes{background:var(--fundo);color:var(--cinza)}
+.versao.antes b{text-decoration:line-through;text-decoration-color:var(--terracota);text-decoration-thickness:2px}
+.versao.agora{background:var(--verde);color:#fff}
+.chat-maria{align-self:center;background:#fff;border-radius:16px;padding:8px 16px;font-size:16px;box-shadow:0 8px 18px -12px rgba(0,0,0,.4)}
+@media (min-width:960px){.historia-grid{grid-template-columns:1fr 1fr}}
+
+/* Benefícios */
+.beneficios{display:grid;gap:14px}
+.beneficio{display:flex;gap:16px;align-items:flex-start;padding:22px;border-radius:22px;background:var(--branco);border:1px solid var(--areia)}
+.beneficio .ic{width:44px;height:44px;border-radius:14px;background:var(--petroleo);color:var(--fundo);display:grid;place-items:center;flex:none}
+.beneficio .ic svg{width:22px;height:22px}
+.beneficio h3{font-size:19px;font-weight:600;margin-bottom:4px}
+.beneficio p{color:var(--cinza);font-size:16px}
+@media (min-width:720px){.beneficios{grid-template-columns:1fr 1fr}}
+@media (min-width:1040px){.beneficios{grid-template-columns:repeat(3,1fr)}}
+
+/* Para quem */
+.segmentos{display:grid;gap:14px}
+.segmento{border-radius:24px;padding:26px;background:var(--petroleo);color:var(--fundo);display:flex;flex-direction:column;gap:10px}
+.segmento:nth-child(2){background:var(--verde)}
+.segmento:nth-child(3){background:var(--terracota)}
+.segmento h3{font-size:26px;font-weight:600}
+.segmento p{color:rgba(243,238,230,.88)}
+.segmento .unid{font-family:var(--mono);font-size:13px;opacity:.85;margin-top:6px}
+@media (min-width:860px){.segmentos{grid-template-columns:repeat(3,1fr)}}
+
+/* Passos */
+.passos{list-style:none;margin:0;padding:0;display:grid;gap:16px;counter-reset:p}
+.passos li{counter-increment:p;border-top:3px solid var(--terracota);padding-top:16px;display:flex;flex-direction:column;gap:6px}
+.passos li::before{content:"0" counter(p);font-family:var(--mono);font-size:14px;color:var(--terracota)}
+.passos h3{font-size:21px;font-weight:600}
+.passos p{color:var(--cinza);font-size:16px}
+@media (min-width:860px){.passos{grid-template-columns:repeat(4,1fr);gap:28px}}
+
+/* FAQ */
+.faq{display:flex;flex-direction:column;gap:10px;max-width:860px}
+.faq details{background:var(--branco);border:1px solid var(--areia);border-radius:20px}
+.faq summary{cursor:pointer;list-style:none;padding:20px 22px;font-weight:600;font-size:18px;display:flex;justify-content:space-between;gap:16px;align-items:center}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-size:26px;font-weight:400;color:var(--terracota);transition:transform .2s;flex:none}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq details p{padding:0 22px 20px;color:var(--cinza)}
+
+/* CTA final */
+.final{background:var(--petroleo);color:var(--fundo);position:relative;overflow:hidden}
+.final::before{content:"";position:absolute;right:-140px;top:-140px;width:380px;height:380px;border-radius:50%;background:var(--terracota)}
+.final::after{content:"";position:absolute;right:-60px;top:-60px;width:190px;height:190px;border-radius:50%;background:var(--areia)}
+.final .conteudo{position:relative;z-index:1;display:flex;flex-direction:column;gap:22px;align-items:flex-start}
+.final .titulo{max-width:16ch}
+.final .lead{color:var(--areia)}
+.final .acoes{display:flex;flex-wrap:wrap;gap:12px}
+.contatos{display:flex;flex-wrap:wrap;gap:12px;margin-top:6px}
+.contatos a{display:flex;align-items:center;gap:12px;color:var(--fundo);text-decoration:none;padding:8px 18px 8px 8px;border-radius:999px;border:1px solid rgba(232,220,198,.35);min-height:56px}
+.contatos a:hover{border-color:var(--areia)}
+.contatos svg{width:40px;height:40px;padding:9px;border-radius:50%;background:var(--fundo);color:var(--petroleo);flex:none}
+.contatos small{display:block;font-size:12px;color:var(--areia)}
+.contatos b{font-weight:600}
+footer{padding-block:28px;font-size:14px;color:var(--cinza)}
+footer .conteudo{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;align-items:center}
+.logo-pe svg{height:24px}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><symbol id="moppa-m" viewBox="66 -27.5 731 649.5"><path d="M625 229.4 L781 100.8 Q797 83.6 797 103.6 L797 562 A60 60 0 0 1 737 622 L685 622 A60 60 0 0 1 625 562 Z" fill="var(--logo-m,#1E322A)"/><path d="M66 97 A62 62 0 0 1 128 35 L170 35 C205 35 228 51 250 66 L418 178 L418 262 C395 232 360 212 320 212 C272 212 236 240 235 300 L235 562 A60 60 0 0 1 175 622 L126 622 A60 60 0 0 1 66 562 Z" fill="var(--logo-m,#1E322A)"/><path d="M418 180 L645.9 -8.1 A85 85 0 0 1 754.1 123.1 L418 400 Z" fill="var(--logo-f,#C76E4B)"/></symbol></svg>
+
+<header class="topo">
+  <div class="conteudo">
+    <a href="index.html" class="logo" aria-label="Moppa, início"><svg viewBox="0 0 3251 874" aria-hidden="true"><use href="#moppa-m" x="0" y="0" width="731" height="649.5"/><text x="811" y="649.5" font-family="Jost, system-ui, sans-serif" font-weight="600" font-size="1017" textLength="2440" lengthAdjust="spacing" fill="#1E322A">oppa</text></svg></a>
+    <nav class="menu" aria-label="Seções">
+      <a href="#como">Como funciona</a>
+      <a href="#video">Vídeo</a>
+      <a href="#para-quem">Para quem</a>
+      <a href="#duvidas">Dúvidas</a>
+      <a href="demo.html" class="btn p">Experimente grátis</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="faixa hero" aria-labelledby="h1">
+    <div class="conteudo">
+      <div class="hero-txt">
+        <p class="eyebrow">Moppa · orçamentos e encomendas</p>
+        <h1 id="h1">Suas encomendas organizadas, do pedido à produção.</h1>
+        <p class="lead">Seu cliente escolhe num cardápio em vídeo ou pede pelo WhatsApp. Você recebe tudo num painel, com número, preço certo e status. Sem áudio perdido, sem pedido trocado.</p>
+        <div class="acoes">
+          <a class="btn p" href="demo.html">Experimente em 2 minutos</a>
+          <a class="btn c" href="https://wa.me/5534997182722?text=Ol%C3%A1!%20Vi%20a%20apresenta%C3%A7%C3%A3o%20do%20Moppa%20e%20quero%20saber%20mais." target="_blank" rel="noopener">Falar com o comercial</a>
+        </div>
+        <div class="prova"><span>Sem cadastro para testar</span><span>Funciona no celular</span><span>Montamos tudo com você</span></div>
+      </div>
+      <div class="palco" aria-hidden="true">
+        <span class="q1"></span><span class="q2"></span>
+        <div class="fone"><video src="video/moppa-vertical.mp4" poster="video/moppa-vertical.jpg" autoplay muted loop playsinline preload="metadata"></video></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="faixa dor" aria-labelledby="h-dor">
+    <div class="conteudo dor-grid">
+      <div class="cab-secao" style="margin:0">
+        <p class="eyebrow">O dia a dia de quem vende por encomenda</p>
+        <h2 class="titulo" id="h-dor">Hoje o pedido chega de todo jeito.</h2>
+        <p class="lead">E cada canal solto vira um erro no sábado.</p>
+        <div class="bolhas" style="margin-top:14px">
+          <span class="bolha"><i>WhatsApp</i>Áudio de 1:34</span>
+          <span class="bolha"><i>Instagram</i>Quanto fica o cento?</span>
+          <span class="bolha"><i>Maria</i>Muda pra 3 kg!</span>
+          <span class="bolha"><i>Telefone</i>Anotado no caderno</span>
+          <span class="bolha"><i>Maria</i>Confirma sábado?</span>
+        </div>
+      </div>
+      <div class="custos">
+        <div class="custo"><b>Dois pedidos, um nome</b><span>Qual das Marias pediu o bolo de sábado?</span></div>
+        <div class="custo"><b>Preço de cabeça</b><span>Cada atendente passa um valor diferente para o mesmo cento.</span></div>
+        <div class="custo"><b>Alteração perdida</b><span>A mudança veio num áudio às 22h e a cozinha não ouviu.</span></div>
+        <div class="custo"><b>Pedido esquecido</b><span>A mensagem afundou na conversa e o cliente comprou em outro lugar.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="faixa" id="como" aria-labelledby="h-como">
+    <div class="conteudo">
+      <div class="cab-secao">
+        <p class="eyebrow">Como funciona</p>
+        <h2 class="titulo" id="h-como">Três peças que trabalham juntas.</h2>
+        <p class="lead">O pedido pode nascer no cardápio ou no WhatsApp. Ele cai no mesmo painel e segue o mesmo caminho até a produção.</p>
+      </div>
+      <div class="pilares">
+        <article class="pilar">
+          <span class="n">01</span>
+          <h3>Cardápio em vídeo</h3>
+          <p>Seu cliente rola os produtos em vídeo, monta a sacola e envia. Abre por link, QR code ou cartão NFC, sem baixar app.</p>
+          <div class="mini" aria-hidden="true">
+            <div class="reel"><b>Coxinha de festa</b><div class="lin"><span>R$ 95,00 o cento</span><span class="add">+ Adicionar</span></div></div>
+          </div>
+        </article>
+        <article class="pilar">
+          <span class="n">02</span>
+          <h3>Orçamento pelo WhatsApp</h3>
+          <p>Um assistente atende com a voz da sua loja, entende o pedido e monta o orçamento com os preços da sua tabela.</p>
+          <div class="mini" aria-hidden="true">
+            <span class="msg eu">100 coxinhas pra sábado</span>
+            <span class="msg">Anotado! Seu orçamento: R$ 95,00. Posso confirmar?</span>
+          </div>
+        </article>
+        <article class="pilar">
+          <span class="n">03</span>
+          <h3>Painel da empresa</h3>
+          <p>Todo pedido com número, status e canal de origem. Você envia a proposta com um toque e o cliente aprova pelo link.</p>
+          <div class="mini" aria-hidden="true">
+            <div class="lin"><span><span class="cod">ORC-0152</span> · Ana</span><span class="pill sol">Solicitado</span></div>
+            <div class="lin"><span><span class="cod">ORC-0146</span> · Maria</span><span class="pill apr">Aprovado</span></div>
+            <div class="lin"><span><span class="cod">PED-0145</span> · Carlos</span><span class="pill ped">Em produção</span></div>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="faixa videos" id="video" aria-labelledby="h-video">
+    <div class="conteudo">
+      <div class="cab-secao">
+        <p class="eyebrow">Veja em 30 segundos</p>
+        <h2 class="titulo" id="h-video">O Moppa funcionando, do começo ao fim.</h2>
+      </div>
+      <div class="abas" role="tablist" aria-label="Vídeos">
+        <button role="tab" aria-selected="true" aria-controls="painel-video" id="aba-cardapio" data-v="moppa">Cardápio e painel</button>
+        <button role="tab" aria-selected="false" aria-controls="painel-video" id="aba-whats" data-v="whatsapp">Pelo WhatsApp</button>
+      </div>
+      <div class="tela-video" id="painel-video" role="tabpanel" aria-labelledby="aba-cardapio">
+        <video class="hor" id="v-hor" controls playsinline preload="metadata" poster="video/moppa-horizontal.jpg" src="video/moppa-horizontal.mp4"></video>
+        <video class="vert" id="v-vert" controls playsinline preload="metadata" poster="video/moppa-vertical.jpg" src="video/moppa-vertical.mp4"></video>
+      </div>
+      <p class="nota-video">Os vídeos não têm som: dá para assistir em qualquer lugar.</p>
+    </div>
+  </section>
+
+  <section class="faixa" aria-labelledby="h-hist">
+    <div class="conteudo historia-grid">
+      <div class="cab-secao" style="margin:0">
+        <p class="eyebrow">O cliente mudou de ideia?</p>
+        <h2 class="titulo" id="h-hist">A Maria trocou o bolo? Tudo certo.</h2>
+        <p class="lead">A mudança fica registrada no mesmo pedido, com o que era antes e o que vale agora. Nada de pedido duplicado, e a cozinha faz sempre a versão certa.</p>
+      </div>
+      <div class="pedido" aria-label="Exemplo: pedido da Maria com uma alteração">
+        <div class="topo-ped"><b>Pedido da Maria</b><span class="cod">nº 0145</span></div>
+        <div class="versao antes"><small>ANTES · 12/10</small><b>Bolo de chocolate · 2 kg</b><span>R$ 180,00</span></div>
+        <span class="chat-maria">“Muda pra ninho, 3 kg!”</span>
+        <div class="versao agora"><small>AGORA · 13/10 · APROVADO</small><b>Bolo de ninho · 3 kg</b><span>R$ 270,00</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="faixa" style="padding-top:0" aria-labelledby="h-ben">
+    <div class="conteudo">
+      <div class="cab-secao">
+        <p class="eyebrow">O que você ganha</p>
+        <h2 class="titulo" id="h-ben">Menos correria, nenhum pedido perdido.</h2>
+      </div>
+      <div class="beneficios">
+        <div class="beneficio"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="5" width="16" height="14" rx="3"/><path d="M8 10h8M8 14h5"/></svg></span><div><h3>Um número por pedido</h3><p>Duas Marias, dois números. Ninguém troca encomenda.</p></div></div>
+        <div class="beneficio"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h16M4 17h10"/></svg></span><div><h3>Preço sempre certo</h3><p>O valor sai da sua tabela. Pedido antigo guarda o preço da época.</p></div></div>
+        <div class="beneficio"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg></span><div><h3>Atende a qualquer hora</h3><p>O assistente monta orçamentos no WhatsApp até de madrugada.</p></div></div>
+        <div class="beneficio"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4 4L19 7"/></svg></span><div><h3>Aprovação pelo link</h3><p>O cliente aprova sem ligação, e o pedido já vai para a produção.</p></div></div>
+        <div class="beneficio"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18V8M10 18V5M16 18v-7M20 18H3"/></svg></span><div><h3>Tudo num painel</h3><p>Filtre por status e canal e veja o que precisa de resposta hoje.</p></div></div>
+        <div class="beneficio"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="3" width="10" height="18" rx="2.5"/><path d="M11 18h2"/></svg></span><div><h3>No celular ou no computador</h3><p>O painel funciona nos dois. Você acompanha de onde estiver.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="faixa" id="para-quem" style="background:var(--branco)" aria-labelledby="h-quem">
+    <div class="conteudo">
+      <div class="cab-secao">
+        <p class="eyebrow">Para quem é</p>
+        <h2 class="titulo" id="h-quem">Feito para quem vende por encomenda.</h2>
+      </div>
+      <div class="segmentos">
+        <div class="segmento"><h3>Padarias</h3><p>Salgados por cento, pão por unidade, pão de queijo por kg. Tudo no cardápio, com o preço certo.</p><span class="unid">un · cento · kg</span></div>
+        <div class="segmento"><h3>Confeitarias</h3><p>Bolos sob encomenda com data, sabor, tamanho e preço sob consulta quando precisar.</p><span class="unid">data · sabor · tamanho</span></div>
+        <div class="segmento"><h3>Buffets</h3><p>Galeria de temas com fotos. O cliente escolhe a decoração e você recebe o pedido completo.</p><span class="unid">temas · fotos · pacotes</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="faixa" aria-labelledby="h-passos">
+    <div class="conteudo">
+      <div class="cab-secao">
+        <p class="eyebrow">Como começamos</p>
+        <h2 class="titulo" id="h-passos">Você não precisa entender de sistema.</h2>
+        <p class="lead">A gente monta tudo junto com você.</p>
+      </div>
+      <ol class="passos">
+        <li><h3>Montamos seu cardápio</h3><p>Produtos, preços e unidades cadastrados com você.</p></li>
+        <li><h3>Você grava os vídeos</h3><p>Pelo celular, na vertical, de 5 a 8 segundos. O Moppa deixa leve.</p></li>
+        <li><h3>Ligamos o WhatsApp</h3><p>O assistente passa a atender com a voz da sua loja.</p></li>
+        <li><h3>Divulgue</h3><p>Link na bio, QR code no balcão, cartão NFC e status.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="faixa" id="duvidas" style="padding-top:0" aria-labelledby="h-faq">
+    <div class="conteudo">
+      <div class="cab-secao">
+        <p class="eyebrow">Dúvidas</p>
+        <h2 class="titulo" id="h-faq">Perguntas que todo mundo faz.</h2>
+      </div>
+      <div class="faq">
+        <details><summary>Meu cliente precisa baixar algum aplicativo?</summary><p>Não. O cardápio abre direto no navegador do celular, por link, QR code ou cartão NFC. E o orçamento pelo WhatsApp acontece na conversa que ele já usa.</p></details>
+        <details><summary>Funciona com o WhatsApp da minha loja?</summary><p>Sim. O assistente atende pelo WhatsApp da sua loja. Na implantação, a gente configura tudo junto com você.</p></details>
+        <details><summary>Preciso de computador?</summary><p>Não. O painel funciona no celular e no computador.</p></details>
+        <details><summary>E se o cliente mudar o pedido?</summary><p>A mudança fica registrada no mesmo pedido, com o que era antes e o que vale agora. Nada se perde e nada duplica.</p></details>
+        <details><summary>Quanto custa?</summary><p>Depende do tamanho da sua operação. Fale com o comercial e a gente monta uma proposta para a sua loja.</p></details>
+        <details><summary>Posso testar antes?</summary><p>Pode. A demonstração leva 2 minutos e não pede cadastro: você faz um pedido de teste e vê ele chegar no painel.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="faixa final" aria-labelledby="h-final">
+    <div class="conteudo">
+      <p class="eyebrow" style="color:var(--areia)">Vamos conversar?</p>
+      <h2 class="titulo" id="h-final">Veja o Moppa funcionando na sua loja.</h2>
+      <p class="lead">Teste agora a demonstração ou chame o comercial. A gente responde rapidinho.</p>
+      <div class="acoes">
+        <a class="btn p" href="demo.html">Experimente em 2 minutos</a>
+        <a class="btn claro" href="https://wa.me/5534997182722?text=Ol%C3%A1!%20Quero%20uma%20demonstra%C3%A7%C3%A3o%20do%20Moppa." target="_blank" rel="noopener">Pedir demonstração</a>
+      </div>
+      <div class="contatos">
+        <a href="https://wa.me/5534997182722" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18.5V6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5v8a2.5 2.5 0 0 1-2.5 2.5H9l-5 4z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8.5 9.5h7M8.5 13h4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span><small>WhatsApp comercial</small><b>(34) 99718-2722</b></span></a>
+        <a href="https://www.instagram.com/moppasolucion/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="17.2" cy="6.8" r="1.2" fill="currentColor"/></svg><span><small>Instagram</small><b>@moppasolucion</b></span></a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="faixa" style="padding-block:28px">
+  <div class="conteudo">
+    <span class="logo logo-pe" role="img" aria-label="Moppa"><svg viewBox="0 0 3251 874" aria-hidden="true"><use href="#moppa-m" x="0" y="0" width="731" height="649.5"/><text x="811" y="649.5" font-family="Jost, system-ui, sans-serif" font-weight="600" font-size="1017" textLength="2440" lengthAdjust="spacing" fill="#1E322A">oppa</text></svg></span>
+    <span>Conte. Calcule. Conquiste.</span>
+  </div>
+</footer>
+
+<script>
+const VIDEOS={moppa:{h:"video/moppa-horizontal",v:"video/moppa-vertical",ph:"video/moppa-horizontal.jpg",pv:"video/moppa-vertical.jpg"},
+  whatsapp:{h:"video/whatsapp-horizontal",v:"video/whatsapp-vertical",ph:"video/whatsapp-horizontal.jpg",pv:"video/whatsapp-vertical.jpg"}};
+document.querySelectorAll(".abas button").forEach(b=>b.addEventListener("click",()=>{
+  document.querySelectorAll(".abas button").forEach(x=>x.setAttribute("aria-selected",String(x===b)));
+  document.getElementById("painel-video").setAttribute("aria-labelledby",b.id);
+  const V=VIDEOS[b.dataset.v], h=document.getElementById("v-hor"), v=document.getElementById("v-vert");
+  h.pause(); v.pause();
+  h.poster=V.ph; h.src=V.h+".mp4"; v.poster=V.pv; v.src=V.v+".mp4";
+}));
+// o vídeo do topo só toca quando aparece na tela
+const vt=document.querySelector(".fone video");
+if(vt&&"IntersectionObserver"in window){new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){vt.play().catch(()=>{})}else vt.pause()}),{threshold:.3}).observe(vt)}
+</script>
+</body>
+</html>

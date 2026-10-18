@@ -1,0 +1,724 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Demonstração do Moppa</title>
+<meta name="description" content="Suas encomendas organizadas, do pedido à produção. Experimente em 2 minutos, sem cadastro.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Moppa">
+<meta property="og:title" content="Moppa: suas encomendas organizadas, do pedido à produção">
+<meta property="og:description" content="Seu cliente pede pelo celular, num cardápio em vídeo. Você recebe tudo num painel. Experimente em 2 minutos, sem cadastro.">
+<meta property="og:url" content="https://site-moppa.vercel.app/demo.html">
+<meta property="og:image" content="https://site-moppa.vercel.app/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="pt_BR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" content="#0f4c5c">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1024 1024'%3E%3Crect width='1024' height='1024' rx='228' fill='#1E322A'/%3E%3Cg transform='matrix%280.76607 0 0 0.76607 181.44 284.28%29'%3E%3Cpath d='M625 229.4 L781 100.8 Q797 83.6 797 103.6 L797 562 A60 60 0 0 1 737 622 L685 622 A60 60 0 0 1 625 562 Z' fill='#F3EEE6'/%3E%3Cpath d='M66 97 A62 62 0 0 1 128 35 L170 35 C205 35 228 51 250 66 L418 178 L418 262 C395 232 360 212 320 212 C272 212 236 240 235 300 L235 562 A60 60 0 0 1 175 622 L126 622 A60 60 0 0 1 66 562 Z' fill='#F3EEE6'/%3E%3Cpath d='M418 180 L645.9 -8.1 A85 85 0 0 1 754.1 123.1 L418 400 Z' fill='#C76E4B'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: celular = uma coluna; computador (≥960px) = página larga com hero em duas colunas,
+   cliente (celular) e empresa (painel) lado a lado, e orçamento ao lado do texto. Paleta Moppa, só tema claro. */
+:root{
+  --petroleo:#0f4c5c; --terracota:#c76e4b; --areia:#e8dcc6; --verde:#2e5d4b; --grafite:#2b2b2b;
+  --fundo:#f3eee6; --cinza:#686765; --branco:#fbf8f3; --erro-bg:#f6dcd6; --erro:#9b2c1f;
+  --display:"Jost",system-ui,-apple-system,"Segoe UI",sans-serif; --mono:"DM Mono",ui-monospace,Menlo,monospace;
+  color-scheme:light;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--fundo);color:var(--grafite);font-family:var(--display);font-size:16px;line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+img{max-width:100%}
+[hidden]{display:none!important}
+button{font:inherit;cursor:pointer;border:0;color:inherit;background:none}
+button[disabled]{opacity:.45;cursor:default}
+a{color:var(--petroleo)}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid var(--terracota);outline-offset:2px}
+.wrap{max-width:480px;margin:0 auto;display:flex;flex-direction:column;gap:52px;padding-block:16px 40px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--petroleo);margin:0}
+h1{font-size:clamp(34px,10vw,44px);line-height:1.04;font-weight:600;letter-spacing:-.02em;margin:0;text-wrap:balance}
+h2{font-size:28px;line-height:1.12;font-weight:600;letter-spacing:-.01em;margin:6px 0 0;text-wrap:balance}
+h3{font-size:18px;line-height:1.25;font-weight:600;margin:0}
+p{margin:0}
+.lead{color:var(--cinza);font-size:17px;max-width:46ch}
+.sub{color:var(--cinza);font-size:15px}
+.bloco{display:flex;flex-direction:column;gap:16px;scroll-margin-top:16px;min-width:0}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;min-height:52px;border-radius:999px;padding:0 20px;font-weight:600;font-size:16px;text-decoration:none;width:100%;text-align:center}
+.btn.p{background:var(--petroleo);color:var(--fundo)}
+.btn.t{background:var(--terracota);color:#fff}
+.btn.c{background:transparent;color:var(--petroleo);border:1.5px solid var(--petroleo)}
+.btn.v{background:var(--verde);color:#fff}
+.topo{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.marca{display:flex;align-items:center;gap:8px;font-weight:600;font-size:18px;color:var(--petroleo)}
+.topo a{font-size:14px;font-weight:500}
+.topo-nav{display:flex;align-items:center;gap:14px}
+.topo-pill{display:inline-flex;align-items:center;min-height:40px;padding:0 16px;border-radius:999px;background:var(--petroleo);color:var(--fundo)!important;text-decoration:none}
+@media (max-width:420px){.topo-nav a:not(.topo-pill){display:none}}
+.logo{display:inline-flex;line-height:0}
+.logo svg{height:30px;width:auto;display:block;overflow:visible}
+.logo-pe{justify-content:center}
+.logo-pe svg{height:24px}
+.para{align-self:flex-start;display:inline-flex;align-items:center;gap:8px;background:var(--branco);border:1px solid var(--areia);border-radius:999px;padding:6px 14px 6px 6px;font-size:14px}
+.para i{width:26px;height:26px;border-radius:50%;background:var(--terracota);color:#fff;display:grid;place-items:center;font-style:normal;font-weight:600;font-size:13px}
+.para b{font-weight:600;color:var(--petroleo)}
+
+/* Etapas */
+.etapas{display:flex;gap:6px}
+.etapas span{flex:1;height:5px;border-radius:999px;background:var(--areia);transition:background .3s}
+.etapas span.on{background:var(--petroleo)}
+.num{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--petroleo);color:var(--fundo);font-family:var(--mono);font-size:13px;margin-right:8px;vertical-align:2px}
+
+/* Cena de abertura: bagunça → pedido organizado */
+.cena{background:var(--petroleo);border-radius:28px;position:relative;overflow:hidden;height:320px;color:var(--fundo)}
+.cena .q1{position:absolute;right:-90px;top:-90px;width:220px;height:220px;border-radius:50%;background:var(--terracota)}
+.cena .q2{position:absolute;right:-30px;top:-30px;width:110px;height:110px;border-radius:50%;background:var(--areia)}
+.bol{position:absolute;left:50%;top:46%;transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y)));background:#fff;color:var(--grafite);
+  border-radius:14px 14px 14px 4px;padding:6px 11px 7px;font-size:13px;white-space:nowrap;box-shadow:0 6px 16px -8px rgba(0,0,0,.5);opacity:0}
+.bol i{display:block;font-style:normal;font-size:10px;font-weight:600;color:var(--terracota);text-transform:uppercase;letter-spacing:.04em}
+.b1{--x:-72px;--y:-92px}.b2{--x:66px;--y:-52px}.b3{--x:-64px;--y:-8px}.b4{--x:70px;--y:36px}.b5{--x:-36px;--y:80px}
+.ped{position:absolute;left:50%;top:46%;transform:translate(-50%,-50%);width:min(270px,80%);background:var(--fundo);color:var(--grafite);border-radius:18px;padding:14px 16px;
+  display:flex;flex-direction:column;gap:3px;font-size:13px;box-shadow:0 18px 30px -16px rgba(0,0,0,.6);opacity:0}
+.ped b{font-size:17px;font-weight:600;color:var(--petroleo)}
+.ped span{color:var(--cinza)}
+.ped-top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px}
+.ped .ped-n{font-family:var(--mono);font-size:12px;color:var(--petroleo)}
+.ped .ped-ok{font-size:11px;font-weight:600;background:#dde8e1;color:var(--verde);padding:3px 9px;border-radius:999px}
+.legenda{position:absolute;left:16px;right:16px;bottom:16px;text-align:center;font-size:14px;font-weight:500;color:var(--areia);opacity:0}
+.legenda.l2{color:#fff}
+.rever{position:absolute;right:12px;bottom:12px;width:36px;height:36px;border-radius:50%;background:rgba(243,238,230,.16);color:var(--fundo);font-size:18px;opacity:0}
+.cena .ped,.cena .l2,.cena .rever{opacity:1}
+.cena .bol,.cena .l1{opacity:0}
+.cena.play .bol{animation:bEntra .45s ease-out both,bJunta .7s 2.9s ease-in forwards}
+.cena.play .b1{animation-delay:.3s,2.9s}.cena.play .b2{animation-delay:.7s,2.9s}.cena.play .b3{animation-delay:1.1s,2.9s}
+.cena.play .b4{animation-delay:1.5s,2.9s}.cena.play .b5{animation-delay:1.9s,2.9s}
+.cena.play .l1{animation:leg1 3.2s .2s both}
+.cena.play .ped{animation:pedIn .6s 3.5s cubic-bezier(.2,1.3,.4,1) both}
+.cena.play .l2{animation:fade .5s 4.1s both}
+.cena.play .rever{animation:fade .4s 4.6s both}
+@keyframes bEntra{from{opacity:0;transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y) + 16px)) scale(.85)}to{opacity:1;transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) scale(1)}}
+@keyframes bJunta{from{opacity:1;transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) scale(1)}to{opacity:0;transform:translate(-50%,-50%) scale(.25)}}
+@keyframes leg1{0%{opacity:0}12%{opacity:1}85%{opacity:1}100%{opacity:0}}
+@keyframes pedIn{from{opacity:0;transform:translate(-50%,-50%) scale(.7)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.acoes{display:flex;flex-direction:column;gap:10px}
+.hero-txt{display:flex;flex-direction:column;gap:16px}
+
+/* Pílulas de escolha */
+.opc{display:flex;flex-wrap:wrap;gap:8px}
+.opc label{position:relative}
+.opc input{position:absolute;opacity:0;pointer-events:none}
+.opc span{display:inline-flex;align-items:center;min-height:42px;padding:0 14px;border-radius:999px;border:1.5px solid var(--areia);background:#fff;font-size:14px;cursor:pointer}
+.opc input:checked+span{background:var(--petroleo);border-color:var(--petroleo);color:var(--fundo)}
+.opc input:focus-visible+span{outline:3px solid var(--terracota);outline-offset:2px}
+.opc .meu span{border-style:dashed;border-color:var(--terracota)}
+.opc .meu input:checked+span{background:var(--terracota);border-color:var(--terracota);border-style:solid;color:#fff}
+
+/* Meus produtos */
+.meus{background:var(--branco);border:1.5px dashed var(--terracota);border-radius:20px}
+.meus summary{list-style:none;cursor:pointer;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.meus summary::-webkit-details-marker{display:none}
+.meus summary b{display:block;font-weight:600;color:var(--grafite)}
+.meus summary small{color:var(--cinza);font-size:13px}
+.meus summary .seta{width:32px;height:32px;border-radius:50%;background:var(--terracota);color:#fff;display:grid;place-items:center;flex:none;font-size:18px;transition:transform .2s}
+.meus[open] summary .seta{transform:rotate(45deg)}
+.meus .corpo{padding:0 16px 16px;display:flex;flex-direction:column;gap:12px}
+.linha-prod{display:grid;grid-template-columns:minmax(0,1fr) 96px 92px;gap:6px}
+.linha-prod input,.linha-prod select{min-height:46px;font-size:15px;padding:0 10px}
+.mini-rot{display:grid;grid-template-columns:minmax(0,1fr) 96px 92px;gap:6px;font-size:12px;color:var(--cinza)}
+.add-linha{align-self:flex-start;font-size:14px;font-weight:600;color:var(--terracota);padding:6px 0}
+
+/* Celular com reels */
+.fone{background:var(--grafite);border-radius:36px;padding:10px;width:min(300px,100%);align-self:center;box-shadow:0 24px 40px -28px rgba(15,76,92,.6)}
+.reels{height:440px;overflow-y:auto;scroll-snap-type:y mandatory;border-radius:28px;scrollbar-width:none;overscroll-behavior:contain;position:relative}
+.reels::-webkit-scrollbar{display:none}
+.reel{height:100%;scroll-snap-align:start;scroll-snap-stop:always;position:relative;display:flex;flex-direction:column;justify-content:flex-end;padding:18px 16px;color:#fff;gap:6px;overflow:hidden}
+.reel::before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 40%,rgba(10,14,12,.78) 100%)}
+.reel>*{position:relative}
+.reel .forma{position:absolute;left:50%;top:34%;transform:translate(-50%,-50%);width:150px;height:150px;border-radius:50%;background:rgba(255,255,255,.18);box-shadow:inset 0 0 0 18px rgba(255,255,255,.08)}
+.reel .forma::after{content:"";position:absolute;inset:34px;border-radius:50%;background:rgba(255,255,255,.22)}
+.reel .topinho{position:absolute;top:14px;left:16px;right:16px;display:flex;justify-content:space-between;gap:8px;font-size:12px}
+.reel .loja{display:flex;align-items:center;gap:6px;font-weight:600;min-width:0}
+.reel .loja span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.reel .loja i{width:22px;height:22px;border-radius:50%;background:var(--fundo);color:var(--petroleo);display:grid;place-items:center;font-style:normal;font-size:11px;flex:none}
+.reel .cont{font-family:var(--mono)}
+.reel .tag{align-self:flex-start;font-size:11px;font-weight:600;background:var(--fundo);color:var(--petroleo);padding:3px 9px;border-radius:999px}
+.reel b{font-size:22px;line-height:1.1;font-weight:600;overflow-wrap:anywhere}
+.reel .desc{font-size:13px;opacity:.9}
+.reel .linha{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:4px}
+.reel .preco{font-size:15px;font-weight:600}
+.reel .preco small{font-weight:400;opacity:.85;font-size:12px}
+.reel .preco.mudou{animation:pisca 1s ease 2}
+@keyframes pisca{50%{color:#ffd9a8}}
+.add{min-height:40px;border-radius:999px;padding:0 14px;background:var(--fundo);color:var(--petroleo);font-weight:600;font-size:13px;white-space:nowrap}
+.add.ok{background:var(--terracota);color:#fff}
+.dica{position:absolute;top:44px;left:50%;transform:translateX(-50%);font-size:11px;background:rgba(10,14,12,.5);padding:4px 10px;border-radius:999px;white-space:nowrap}
+.sacola{background:var(--branco);border:1px solid var(--areia);border-radius:20px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.sacola .it{display:flex;justify-content:space-between;gap:10px;font-size:14px;font-variant-numeric:tabular-nums}
+.sacola .tot{display:flex;justify-content:space-between;border-top:1px dashed var(--areia);padding-top:8px;font-weight:600;font-variant-numeric:tabular-nums}
+.vazio{font-size:14px;color:var(--cinza);text-align:center;padding:6px}
+
+/* Painel */
+.painel{background:var(--branco);border:1px solid var(--areia);border-radius:24px;overflow:hidden}
+.painel .barra{background:var(--petroleo);color:var(--fundo);padding:12px 16px;display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:14px}
+.painel .barra b{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.painel .corpo{padding:16px;display:flex;flex-direction:column;gap:14px}
+.painel .lista{display:flex;flex-direction:column;gap:6px}
+.painel .outro{display:flex;justify-content:space-between;gap:8px;align-items:center;font-size:13px;color:var(--cinza);padding:8px 10px;border-radius:10px;background:var(--fundo)}
+.notif{display:flex;gap:10px;align-items:center;background:#fff;border:1px solid var(--areia);border-radius:14px;padding:10px 12px;animation:cai .5s cubic-bezier(.2,1.3,.4,1) both}
+@keyframes cai{from{opacity:.001;transform:translateY(-16px)}to{opacity:1;transform:none}}
+.notif .ic{width:30px;height:30px;border-radius:9px;background:var(--terracota);flex:none}
+.notif small{display:block;color:var(--cinza);font-size:12px}
+.cab{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.cod{font-family:var(--mono);font-size:14px;color:var(--petroleo)}
+.pill{font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;white-space:nowrap}
+.pill.solicitado{background:#e1ebee;color:var(--petroleo)}
+.pill.enviado{background:#efe4cf;color:#6b5220}
+.pill.alteracao{background:var(--erro-bg);color:var(--erro)}
+.pill.aprovado{background:#dde8e1;color:var(--verde)}
+.pill.producao{background:var(--petroleo);color:var(--fundo)}
+.itens{display:flex;flex-direction:column;gap:6px;font-size:14px}
+.itens div{display:flex;justify-content:space-between;gap:10px;font-variant-numeric:tabular-nums}
+.itens .mud{background:#fff3e6;border-radius:6px;padding:2px 6px;margin:0 -6px}
+.meta{display:flex;gap:6px;flex-wrap:wrap}
+.meta span{font-family:var(--mono);font-size:11px;color:var(--cinza);background:var(--fundo);padding:3px 8px;border-radius:6px}
+.vers{display:flex;gap:6px;flex-wrap:wrap}
+.vers button{font-family:var(--mono);font-size:12px;padding:5px 10px;border-radius:8px;background:var(--fundo);color:var(--cinza);min-height:32px}
+.vers button.on{background:var(--petroleo);color:#fff}
+.hist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;font-size:13px;color:var(--cinza)}
+.hist li{display:flex;gap:8px}
+.hist time{font-family:var(--mono);font-size:11px;min-width:42px;padding-top:2px}
+.lado{font-size:12px;font-family:var(--mono);color:var(--cinza);text-transform:uppercase;letter-spacing:.06em;margin-bottom:-6px}
+.botoes{display:flex;flex-direction:column;gap:8px}
+.fechou{background:#dde8e1;color:var(--verde);border-radius:14px;padding:12px 14px;font-size:14px}
+
+/* Preço */
+.preco-box{background:var(--branco);border:1px solid var(--areia);border-radius:24px;padding:16px;display:flex;flex-direction:column;gap:14px}
+.ajuste{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.ajuste .val{font-family:var(--mono);font-size:26px;color:var(--petroleo);font-variant-numeric:tabular-nums}
+.ajuste button{width:48px;height:48px;border-radius:50%;background:var(--fundo);border:1.5px solid var(--areia);font-size:22px;font-weight:600;color:var(--petroleo)}
+.compara{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.compara div{border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.compara .a{background:var(--fundo)}
+.compara .b{background:#dde8e1}
+.compara small{font-size:12px;color:var(--cinza)}
+.compara b{font-family:var(--mono);font-size:20px;font-weight:500;font-variant-numeric:tabular-nums}
+select,input[type=text],input[type=tel],textarea{font:inherit;font-size:16px;min-height:50px;border-radius:14px;border:1px solid var(--areia);background:#fff;padding:0 14px;color:var(--grafite);width:100%;min-width:0}
+textarea{padding:12px 14px;min-height:88px;resize:vertical}
+
+/* Fechamento */
+.comeco{display:flex;flex-direction:column;gap:10px}
+.comeco div{border-top:3px solid var(--terracota);padding-top:10px;display:flex;flex-direction:column;gap:2px}
+.comeco p{color:var(--cinza);font-size:15px}
+.form{background:var(--branco);border:1px solid var(--areia);border-radius:26px;padding:20px;display:flex;flex-direction:column;gap:16px}
+.campo{display:flex;flex-direction:column;gap:6px;min-width:0}
+.campo>label,.campo>.rot{font-size:14px;font-weight:500}
+.campo .dica2{font-size:12px;color:var(--cinza)}
+.erro{font-size:13px;color:var(--erro)}
+.invalido{border-color:var(--erro)!important;background:var(--erro-bg)!important}
+.pronto{background:var(--petroleo);color:var(--fundo);border-radius:26px;padding:22px;display:flex;flex-direction:column;gap:14px;animation:cai .4s ease both}
+.pronto .msg{background:var(--fundo);color:var(--grafite);border-radius:16px;padding:14px;font-size:14px;white-space:pre-wrap}
+.pronto .btn.c{color:var(--fundo);border-color:var(--areia)}
+.pronto small{color:var(--areia);font-size:13px}
+.toast{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--grafite);color:var(--fundo);padding:10px 16px;border-radius:999px;font-size:14px;max-width:calc(100% - 32px);text-align:center;animation:cai .3s ease both;z-index:20}
+footer{text-align:center;font-size:13px;color:var(--cinza);display:flex;flex-direction:column;gap:4px}
+.contatos{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:14px}
+.contatos a{display:flex;align-items:center;gap:10px;min-height:52px;padding:6px 18px 6px 8px;border-radius:999px;background:var(--branco);border:1px solid var(--areia);text-decoration:none;color:var(--petroleo);font-size:15px;font-weight:600;text-align:left}
+.contatos a:hover{border-color:var(--petroleo)}
+.contatos svg{width:36px;height:36px;padding:7px;border-radius:50%;background:var(--petroleo);color:var(--fundo);flex:none}
+.contatos small{display:block;font-size:11px;font-weight:500;color:var(--cinza);letter-spacing:.02em}
+/* Navegação por etapas */
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--fundo);z-index:11}
+.passos-nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;
+  background:var(--fundo);padding:10px 0;margin-bottom:-28px;border-bottom:1px solid var(--areia)}
+.passos-nav button{display:flex;flex-direction:column;align-items:center;gap:4px;padding:6px 2px;border-radius:14px;font-size:12px;color:var(--cinza);min-height:58px;position:relative}
+.passos-nav .n{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--areia);display:grid;place-items:center;font-family:var(--mono);font-size:13px;background:#fff;color:var(--petroleo)}
+.passos-nav button[aria-current=step]{background:var(--branco);color:var(--petroleo);font-weight:600;box-shadow:inset 0 0 0 1px var(--areia)}
+.passos-nav button[aria-current=step] .n{background:var(--petroleo);border-color:var(--petroleo);color:var(--fundo)}
+.passos-nav button.feito .n{background:var(--verde);border-color:var(--verde);color:#fff}
+.painel-etapa{display:flex;flex-direction:column;gap:20px;scroll-margin-top:90px;animation:cai .35s ease both}
+.painel-etapa h2:focus{outline:none}
+.et-cab{display:flex;flex-direction:column;gap:4px}
+.et-grid{display:flex;flex-direction:column;gap:20px}
+.et-col{display:flex;flex-direction:column;gap:16px;min-width:0}
+.guia{margin:0;padding:14px 16px;list-style:none;counter-reset:g;display:flex;flex-direction:column;gap:10px;background:var(--branco);border:1px solid var(--areia);border-radius:18px}
+.guia li{counter-increment:g;display:flex;gap:10px;font-size:15px;align-items:flex-start;line-height:1.35}
+.guia li::before{content:counter(g);width:24px;height:24px;border-radius:50%;background:var(--areia);color:var(--petroleo);font-family:var(--mono);font-size:12px;display:grid;place-items:center;flex:none}
+.guia li.ok{color:var(--cinza)}
+.guia li.ok::before{content:"✓";background:var(--verde);color:#fff;font-family:var(--display);font-weight:700}
+.et-nav{display:flex;justify-content:space-between;align-items:center;gap:10px;border-top:1px solid var(--areia);padding-top:16px}
+.et-nav .btn{width:auto;flex:1 1 0;padding:0 16px;font-size:15px}
+.et-nav span{flex:1 1 0}
+.resumo{background:var(--branco);border:1px solid var(--areia);border-radius:22px;padding:18px;display:flex;flex-direction:column;gap:12px}
+.resumo ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+.resumo li{display:flex;gap:10px;font-size:15px;align-items:flex-start}
+.resumo li::before{content:"";width:20px;height:20px;border-radius:50%;flex:none;margin-top:1px;background:var(--areia)}
+.resumo li.ok::before{background:var(--verde) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5 10.5l3.2 3L15 7' fill='none' stroke='white' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/20px no-repeat}
+.resumo li:not(.ok){color:var(--cinza)}
+
+/* Computador: ocupa a tela */
+@media (min-width:960px){
+  .wrap{max-width:1180px;gap:88px;padding-block:28px 56px}
+  .topo .logo svg{height:38px}
+  .hero{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:64px;align-items:center}
+  .hero .cena{order:2;height:460px;border-radius:36px}
+  .hero .hero-txt{order:1}
+  .hero .acoes{flex-direction:row;align-items:center;gap:16px}
+  .hero .acoes .btn{width:auto;padding:0 32px}
+  .hero .acoes .sub{text-align:left!important}
+  .cena .bol{font-size:15px;padding:8px 14px 9px}
+  .b1{--x:-120px;--y:-130px}.b2{--x:110px;--y:-80px}.b3{--x:-110px;--y:-10px}.b4{--x:120px;--y:50px}.b5{--x:-60px;--y:120px}
+  .cena .ped{width:320px;font-size:15px;padding:18px 20px}
+  .cena .ped b{font-size:20px}
+  h1{font-size:clamp(46px,4.6vw,64px)}
+  h2{font-size:36px}
+  .lead{font-size:19px}
+  .passos-nav{gap:10px;padding:12px 0;margin-bottom:-48px}
+  .passos-nav button{flex-direction:row;justify-content:center;gap:10px;font-size:16px;min-height:52px}
+  .painel-etapa{gap:28px;scroll-margin-top:100px}
+  .et-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:56px;align-items:start}
+  .et-grid.g1{grid-template-columns:minmax(0,1fr) minmax(0,420px);gap:72px;align-items:center}
+  .et-grid.g1 .et-col{max-width:560px}
+  .et-grid.g1 .et-fone{display:flex;justify-content:center}
+  .et-grid.g1 .fone{width:360px}
+  .et-grid.g1 .reels{height:600px}
+  .et-grid.g2{grid-template-columns:minmax(0,320px) minmax(0,1fr)}
+  .et-grid.g2 .guia{position:sticky;top:110px}
+  .et-grid.g4{grid-template-columns:minmax(0,1fr) minmax(0,380px)}
+  .et-grid.g4 .resumo{position:sticky;top:110px}
+  .et-nav .btn{flex:0 0 auto;min-width:220px}
+  .painel .corpo{padding:22px}
+  .botoes{flex-direction:row;flex-wrap:wrap}
+  .botoes .btn{flex:1 1 200px}
+  .botoes .lado{flex-basis:100%}
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><symbol id="moppa-m" viewBox="66 -27.5 731 649.5"><path d="M625 229.4 L781 100.8 Q797 83.6 797 103.6 L797 562 A60 60 0 0 1 737 622 L685 622 A60 60 0 0 1 625 562 Z" fill="var(--logo-m,#1E322A)"/><path d="M66 97 A62 62 0 0 1 128 35 L170 35 C205 35 228 51 250 66 L418 178 L418 262 C395 232 360 212 320 212 C272 212 236 240 235 300 L235 562 A60 60 0 0 1 175 622 L126 622 A60 60 0 0 1 66 562 Z" fill="var(--logo-m,#1E322A)"/><path d="M418 180 L645.9 -8.1 A85 85 0 0 1 754.1 123.1 L418 400 Z" fill="var(--logo-f,#C76E4B)"/></symbol></svg>
+<div class="wrap">
+  <header class="topo">
+    <span class="logo" role="img" aria-label="Moppa"><svg viewBox="0 0 3251 874" aria-hidden="true"><use href="#moppa-m" x="0" y="0" width="731" height="649.5"/><text x="811" y="649.5" font-family="Jost, system-ui, sans-serif" font-weight="600" font-size="1017" textLength="2440" lengthAdjust="spacing" fill="var(--logo-m,#1E322A)">oppa</text></svg></span>
+    <nav class="topo-nav" aria-label="Links">
+      <a href="index.html" class="topo-pill">Conheça o Moppa</a>
+      <a href="#orc">Pedir orçamento</a>
+    </nav>
+  </header>
+
+  <section class="bloco hero" aria-labelledby="h-hero">
+    <div class="cena play" id="cena" role="img" aria-label="Animação: mensagens soltas de WhatsApp, áudio e Instagram se juntam e viram um pedido organizado no Moppa">
+      <span class="q1"></span><span class="q2"></span>
+      <span class="bol b1"><i>WhatsApp</i>🎤 Áudio · 1:34</span>
+      <span class="bol b2"><i>Instagram</i>Quanto fica o cento?</span>
+      <span class="bol b3"><i>Maria</i>Muda pra 3 kg!</span>
+      <span class="bol b4"><i>Telefone</i>Anotado no caderno</span>
+      <span class="bol b5"><i>Maria</i>Confirma sábado?</span>
+      <span class="legenda l1">Hoje: pedido chegando de todo jeito…</span>
+      <div class="ped">
+        <div class="ped-top"><span class="ped-n">Pedido nº 0148</span><span class="ped-ok">✓ Aprovado</span></div>
+        <b>Maria · Centro</b>
+        <span>Bolo de ninho com morango · 3 kg</span>
+        <span>Retirada sábado, 7h · R$ 270,00</span>
+      </div>
+      <span class="legenda l2">Com o Moppa: tudo num pedido só.</span>
+      <button class="rever" id="rever" type="button" aria-label="Ver a animação de novo">↻</button>
+    </div>
+    <div class="hero-txt">
+      <p class="para" id="para" hidden><i id="para-ini">P</i><span>Preparado para <b id="para-nome"></b></span></p>
+      <p class="eyebrow">O que é o Moppa</p>
+      <h1 id="h-hero">Suas encomendas organizadas, do pedido à produção.</h1>
+      <p class="lead">Seu cliente escolhe pelo celular, num cardápio em vídeo. Você recebe o pedido completo e com o preço certo num painel. Sem áudio perdido, sem pedido trocado.</p>
+      <div class="acoes"><a class="btn p" href="#e1" id="comecar">Experimente em 2 minutos</a><p class="sub" style="text-align:center;font-size:13px">Sem cadastro. Você faz um pedido de teste e vê ele chegar.</p></div>
+    </div>
+  </section>
+
+  <nav class="passos-nav" id="nav" aria-label="Etapas da demonstração">
+    <button type="button" data-ir="1" aria-current="step"><span class="n">1</span><span class="t">Cliente</span></button>
+    <button type="button" data-ir="2"><span class="n">2</span><span class="t">Empresa</span></button>
+    <button type="button" data-ir="3"><span class="n">3</span><span class="t">Preço</span></button>
+    <button type="button" data-ir="4"><span class="n">4</span><span class="t">Orçamento</span></button>
+  </nav>
+
+  <!-- Etapa 1 -->
+  <section class="painel-etapa" id="p1" aria-labelledby="h-e1">
+    <div class="et-cab"><p class="eyebrow">Etapa 1 de 4 · Você é o cliente</p><h2 id="h-e1" tabindex="-1">Escolha pelo vídeo e monte a sacola</h2><p class="sub">Faça de conta que você é cliente de uma loja que usa o Moppa.</p></div>
+    <div class="et-grid g1">
+      <div class="et-col">
+        <ol class="guia" id="guia1"><li>Escolha um cardápio de exemplo ou use os seus produtos</li><li>Deslize para cima no celular e toque em “+ Adicionar”</li><li>Envie o pedido</li></ol>
+        <div class="opc" role="radiogroup" aria-label="Cardápio de exemplo" id="segs"></div>
+        <details class="meus" id="meus">
+        <summary><span><b>Teste com os seus produtos</b><small>Veja o seu cardápio no Moppa em 30 segundos.</small></span><span class="seta" aria-hidden="true">+</span></summary>
+        <div class="corpo">
+          <div class="campo"><label for="m-loja">Nome da sua loja</label><input id="m-loja" type="text" maxlength="40" placeholder="Ex.: Padaria Pão Quente"></div>
+          <div class="mini-rot" aria-hidden="true"><span>Produto</span><span>Preço</span><span>Vendido por</span></div>
+          <div id="m-linhas" style="display:flex;flex-direction:column;gap:6px"></div>
+          <button class="add-linha" type="button" id="m-mais">+ Outro produto</button>
+          <p class="erro" id="m-erro" role="alert" hidden></p>
+          <button class="btn t" type="button" id="m-ver">Ver no meu cardápio</button>
+        </div>
+      </details>
+        <div class="sacola" id="sacola"></div>
+      </div>
+      <div class="et-fone"><div class="fone"><div class="reels" id="reels" aria-label="Cardápio em vídeo, deslize para cima"></div></div></div>
+    </div>
+    <div class="et-nav"><span></span><button type="button" class="btn c" data-ir="2" id="prox1">Pular para a etapa 2 →</button></div>
+  </section>
+
+  <!-- Etapa 2 -->
+  <section class="painel-etapa" id="p2" aria-labelledby="h-e2" hidden>
+    <div class="et-cab"><p class="eyebrow">Etapa 2 de 4 · Agora você é a empresa</p><h2 id="h-e2" tabindex="-1">O pedido chega no seu painel</h2><p class="sub">Os botões verdes e de contorno simulam o que o cliente faria pelo link dele.</p></div>
+    <div class="et-grid g2">
+      <ol class="guia" id="guia2"><li>Confira e envie a proposta</li><li>Simule o cliente pedindo uma alteração e crie a nova versão</li><li>Aprove e gere o pedido de produção</li></ol>
+      <div class="painel" id="painel"></div>
+    </div>
+    <div class="et-nav"><button type="button" class="btn c" data-ir="1">← Voltar</button><button type="button" class="btn p" data-ir="3">Próximo: preço →</button></div>
+  </section>
+
+  <!-- Etapa 3 -->
+  <section class="painel-etapa" id="p3" aria-labelledby="h-e3" hidden>
+    <div class="et-cab"><p class="eyebrow">Etapa 3 de 4 · Seu preço manda</p><h2 id="h-e3" tabindex="-1">Mude um preço e veja o que acontece</h2><p class="sub">O cardápio atualiza na hora. O pedido que já foi feito guarda o preço da época.</p></div>
+    <div class="et-grid g3">
+      <div class="preco-box" id="precoBox"></div>
+      <div class="et-col">
+        <h3 style="font-size:22px">Para ter no seu negócio</h3>
+        <div class="comeco">
+        <div><h3>Montamos seu cardápio com você</h3><p>Produtos, preços e unidades: un, cento ou kg.</p></div>
+        <div><h3>Você grava os vídeos pelo celular</h3><p>Na vertical, de 5 a 8 segundos. O Moppa deixa leve.</p></div>
+        <div><h3>Divulgue o link</h3><p>QR no balcão, cartão NFC, bio do Instagram e status do WhatsApp.</p></div>
+      
+      </div>
+    </div>
+    <div class="et-nav"><button type="button" class="btn c" data-ir="2">← Voltar</button><button type="button" class="btn p" data-ir="4">Próximo: orçamento →</button></div>
+  </section>
+
+  <!-- Etapa 4 -->
+  <section class="painel-etapa" id="p4" aria-labelledby="h-orc" hidden>
+    <div class="et-cab"><p class="eyebrow">Etapa 4 de 4 · Orçamento</p><h2 id="h-orc" tabindex="-1">Peça o orçamento do Moppa para o seu negócio</h2><p class="sub">Responda em 1 minuto. A proposta chega no seu WhatsApp.</p></div>
+    <div class="et-grid g4">
+      <div class="et-col">
+        <form class="form" id="form" novalidate>
+        <div class="campo"><label for="nome">Seu nome</label><input id="nome" type="text" autocomplete="name"></div>
+        <div class="campo"><label for="negocio">Nome do negócio</label><input id="negocio" type="text" autocomplete="organization"></div>
+        <div class="campo"><span class="rot" id="r-seg2">Tipo de negócio</span><div class="opc" role="radiogroup" aria-labelledby="r-seg2" id="segs2"></div></div>
+        <div class="campo"><label for="volume">Encomendas por semana</label>
+          <select id="volume"><option>Até 10</option><option selected>De 10 a 30</option><option>De 30 a 80</option><option>Mais de 80</option><option>Não sei dizer</option></select></div>
+        <div class="campo"><span class="rot" id="r-int">O que mais interessa</span><span class="dica2">Marque quantos quiser.</span>
+          <div class="opc" role="group" aria-labelledby="r-int">
+            <label><input type="checkbox" name="int" value="Cardápio em vídeo" id="i-card"><span>Cardápio em vídeo</span></label>
+            <label><input type="checkbox" name="int" value="Organizar orçamentos" id="i-orc"><span>Organizar orçamentos</span></label>
+            <label><input type="checkbox" name="int" value="Alterações com versão" id="i-ver"><span>Alterações com versão</span></label>
+            <label><input type="checkbox" name="int" value="Preço sempre certo" id="i-pre"><span>Preço sempre certo</span></label>
+            <label><input type="checkbox" name="int" value="QR/cartão no balcão"><span>QR/cartão no balcão</span></label>
+          </div></div>
+        <div class="campo"><label for="cidade">Cidade</label><input id="cidade" type="text" autocomplete="address-level2"></div>
+        <div class="campo"><label for="zap">Seu WhatsApp</label><input id="zap" type="tel" inputmode="tel" autocomplete="tel" placeholder="(34) 9 0000-0000"></div>
+        <div class="campo"><label for="obs">Quer contar algo? <span class="dica2">(opcional)</span></label><textarea id="obs" placeholder="Ex.: hoje recebo tudo pelo WhatsApp e me perco nos áudios"></textarea></div>
+        <p class="erro" id="erro" role="alert" hidden></p>
+        <button class="btn t" type="submit">Montar meu pedido de orçamento</button>
+      </form>
+        <div id="pronto" hidden></div>
+      </div>
+      <aside class="resumo" aria-labelledby="h-res"><h3 id="h-res">O que você experimentou</h3><ul id="resumo"></ul><p class="sub" style="font-size:14px">Tudo isso já vai junto na sua mensagem, para a gente montar a proposta certa.</p></aside>
+    </div>
+    <div class="et-nav"><button type="button" class="btn c" data-ir="3">← Voltar</button><span></span></div>
+  </section>
+
+  <footer>
+    <span class="logo logo-pe" role="img" aria-label="Moppa"><svg viewBox="0 0 3251 874" aria-hidden="true"><use href="#moppa-m" x="0" y="0" width="731" height="649.5"/><text x="811" y="649.5" font-family="Jost, system-ui, sans-serif" font-weight="600" font-size="1017" textLength="2440" lengthAdjust="spacing" fill="var(--logo-m,#1E322A)">oppa</text></svg></span>
+    <span>Conte. Calcule. Conquiste.</span>
+    <nav class="contatos" aria-label="Contato">
+      <a href="https://wa.me/5534997182722?text=Ol%C3%A1!%20Quero%20conhecer%20o%20Moppa." target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18.5V6.5A2.5 2.5 0 0 1 6.5 4h11A2.5 2.5 0 0 1 20 6.5v8a2.5 2.5 0 0 1-2.5 2.5H9l-5 4z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8.5 9.5h7M8.5 13h4.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <span><small>WhatsApp comercial</small>(34) 99718-2722</span></a>
+      <a href="https://www.instagram.com/moppasolucion/" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="17.2" cy="6.8" r="1.2" fill="currentColor"/></svg>
+        <span><small>Instagram</small>@moppasolucion</span></a>
+    </nav>
+  </footer>
+</div>
+
+<script>
+const WHATSAPP = "5534997182722"; // comercial Moppa
+const WHATSAPP_EXIBIR = "(34) 99718-2722";
+
+const CARDAPIOS = {
+  Padaria:{loja:"Padaria Bom Grão",itens:[
+    {id:"pao",nome:"Pão de fermentação natural",desc:"Sai do forno às 7h e às 16h.",preco:18,un:"un",tag:"Mais pedido",cor:["#c48a4a","#6e3f1d"]},
+    {id:"cox",nome:"Coxinha de festa",desc:"Frango com catupiry, massa leve.",preco:95,un:"cento",tag:"Encomenda 48h",cor:["#e3a24a","#8a4a16"]},
+    {id:"pdq",nome:"Pão de queijo",desc:"Congelado, pronto para assar.",preco:48,un:"kg",tag:"Mineiro",cor:["#e9c56a","#a1702a"]},
+    {id:"bolo",nome:"Bolo de cenoura",desc:"Cobertura de brigadeiro.",preco:62,un:"un",tag:"Para festa",cor:["#e07b3c","#4a2516"]}]},
+  Confeitaria:{loja:"Doce Ateliê",itens:[
+    {id:"ninho",nome:"Bolo ninho com morango",desc:"Massa branca, recheio cremoso.",preco:90,un:"kg",tag:"Mais pedido",cor:["#e9b7b0","#9a4a52"]},
+    {id:"brig",nome:"Brigadeiro gourmet",desc:"Chocolate belga, forminha 4.",preco:210,un:"cento",tag:"Encomenda 72h",cor:["#8a5a3c","#3a2216"]},
+    {id:"torta",nome:"Torta holandesa",desc:"Serve 12 fatias.",preco:95,un:"un",tag:"Fim de semana",cor:["#d9b48a","#5c3a21"]},
+    {id:"pers",nome:"Bolo personalizado",desc:"Tema e tamanho do seu jeito.",preco:null,un:"un",tag:"Sob consulta",cor:["#b9a7d6","#4e3f6e"]}]},
+  Buffet:{loja:"Buffet Alegria",itens:[
+    {id:"jard",nome:"Decoração Jardim Encantado",desc:"Painel, mesa e arranjos.",preco:1800,un:"un",tag:"Tema",cor:["#9fc3a0","#2e5d4b"]},
+    {id:"doce",nome:"Mesa de doces · 100 pessoas",desc:"8 tipos de doce.",preco:950,un:"un",tag:"Mais pedido",cor:["#e9b7b0","#8a3a4a"]},
+    {id:"salg",nome:"Kit salgados · 100 pessoas",desc:"Coxinha, risole, kibe e mais.",preco:680,un:"un",tag:"Pacote",cor:["#e3a24a","#8a4a16"]},
+    {id:"pers2",nome:"Tema personalizado",desc:"Você escolhe, a gente cria.",preco:null,un:"un",tag:"Sob consulta",cor:["#8fb3c9","#0f4c5c"]}]}
+};
+const CORES=[["#e3a24a","#8a4a16"],["#e9b7b0","#9a4a52"],["#9fc3a0","#2e5d4b"],["#8fb3c9","#0f4c5c"],["#d9b48a","#5c3a21"]];
+const ROTULO={Padaria:"Padaria",Confeitaria:"Confeitaria",Buffet:"Buffet",Meus:"Meus produtos"};
+
+/* Link personalizado: ?loja=Padaria%20Pão%20Quente&tipo=confeitaria */
+const Q=new URLSearchParams(location.search);
+const LOJA=(Q.get("loja")||Q.get("l")||"").replace(/\s+/g," ").trim().slice(0,40);
+const TIPO=({padaria:"Padaria",confeitaria:"Confeitaria",buffet:"Buffet",doceria:"Confeitaria"})[(Q.get("tipo")||Q.get("seg")||"").toLowerCase()];
+
+const s={seg:TIPO||"Padaria",segBase:TIPO||"Padaria",sacola:{},precos:{},pedido:null,verVersao:null,etapa:1,provou:{card:0,orc:0,ver:0,pre:0,meus:0}};
+const $=id=>document.getElementById(id);
+const esc=t=>String(t).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c]);
+const brl=v=>v.toLocaleString("pt-BR",{style:"currency",currency:"BRL"});
+const unTxt=u=>u==="cento"?"o cento":u==="kg"?"o kg":"a unidade";
+const reduz=matchMedia("(prefers-reduced-motion:reduce)").matches;
+const prods=()=>CARDAPIOS[s.seg].itens;
+const lojaNome=()=>s.seg==="Meus"?CARDAPIOS.Meus.loja:(LOJA||CARDAPIOS[s.seg].loja);
+const preco=p=>p.preco==null?null:(s.precos[p.id]??p.preco);
+const agora=()=>new Date().toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
+function toast(t){const el=document.createElement("div");el.className="toast";el.setAttribute("role","status");el.textContent=t;document.body.appendChild(el);setTimeout(()=>el.remove(),2800)}
+/* Etapas */
+let atual=1; const feito=new Set();
+function mostrar(n){
+  atual=n; [1,2,3,4].forEach(i=>$("p"+i).hidden=i!==n);
+  $("nav").scrollIntoView({behavior:reduz?"auto":"smooth",block:"start"});
+  const h=$("p"+n).querySelector("h2"); setTimeout(()=>h.focus({preventScroll:true}),reduz?0:400);
+  atualizar();
+}
+function atualizar(){
+  $("nav").querySelectorAll("button").forEach(b=>{const n=+b.dataset.ir;
+    b.toggleAttribute("aria-current",n===atual); if(n===atual)b.setAttribute("aria-current","step");
+    b.classList.toggle("feito",feito.has(n)&&n!==atual); b.querySelector(".n").textContent=feito.has(n)&&n!==atual?"✓":n;
+    b.setAttribute("aria-label",`Etapa ${n}${feito.has(n)?", concluída":""}`)});
+  const P=s.pedido, temSacola=Object.keys(s.sacola).length>0;
+  const g1=[s.escolheu||temSacola||!!P, temSacola||!!P, !!P];
+  const g2=[!!s.provou.orc, !!s.provou.ver, P?.status==="producao"];
+  [["guia1",g1],["guia2",g2]].forEach(([id,g])=>[...$(id).children].forEach((li,i)=>li.classList.toggle("ok",g[i])));
+  $("prox1").textContent=P?"Próximo: ver o pedido chegar →":"Pular para a etapa 2 →";
+  $("prox1").className="btn "+(P?"p":"c");
+  const itens=[["Viu o cardápio em vídeo",s.provou.card||temSacola],["Montou o cardápio com os seus produtos",s.provou.meus],
+    ["Fez um pedido de teste",!!P],["Enviou a proposta pelo painel",s.provou.orc],["Testou a alteração com nova versão",s.provou.ver],
+    ["Gerou o pedido de produção",P?.status==="producao"],["Mudou um preço da tabela",s.provou.pre]];
+  $("resumo").innerHTML=itens.map(([t,ok])=>`<li class="${ok?"ok":""}">${t}</li>`).join("");
+}
+document.addEventListener("click",e=>{
+  const b=e.target.closest("[data-ir]"); if(b){e.preventDefault();mostrar(+b.dataset.ir);return}
+  const a=e.target.closest('a[href="#orc"]'); if(a){e.preventDefault();mostrar(4);return}
+  if(e.target.closest("#comecar")){e.preventDefault();mostrar(1)}
+});
+
+/* Personalização */
+if(LOJA){
+  $("para").hidden=false; $("para-nome").textContent=LOJA; $("para-ini").textContent=LOJA[0].toUpperCase();
+  document.title="Moppa para "+LOJA;
+  $("m-loja").value=LOJA;
+}
+
+/* Segmentos */
+function renderSegs(){
+  const lista=["Padaria","Confeitaria","Buffet"].concat(CARDAPIOS.Meus?["Meus"]:[]);
+  $("segs").innerHTML=lista.map(x=>`<label class="${x==="Meus"?"meu":""}"><input type="radio" name="segs" value="${x}" ${s.seg===x?"checked":""}><span>${ROTULO[x]}</span></label>`).join("");
+  $("segs2").innerHTML=["Padaria","Confeitaria","Buffet","Outro"].map(x=>`<label><input type="radio" name="segs2" value="${x}" ${s.segBase===x?"checked":""}><span>${x}</span></label>`).join("");
+  $("segs").querySelectorAll("input").forEach(i=>i.onchange=()=>trocarSeg(i.value));
+}
+function trocarSeg(v){
+  s.seg=v; s.escolheu=1; if(v!=="Meus") s.segBase=v; s.sacola={};
+  if(s.pedido && s.pedido.status!=="producao"){s.pedido=null;renderPainel()}
+  renderSegs(); renderReels(); renderSacola(); renderPreco(); $("reels").scrollTop=0; atualizar();
+}
+
+/* Meus produtos */
+const linhaHTML=(n,p="",u="un")=>`<div class="linha-prod">
+  <input type="text" maxlength="40" aria-label="Nome do produto ${n}" placeholder="${n===1?"Ex.: Coxinha":"Produto"}" data-campo="nome">
+  <input type="text" inputmode="decimal" maxlength="9" aria-label="Preço do produto ${n}" placeholder="${n===1?"90,00":"R$"}" data-campo="preco" value="${p}">
+  <select aria-label="Vendido por, produto ${n}" data-campo="un"><option value="un" ${u==="un"?"selected":""}>unidade</option><option value="cento" ${u==="cento"?"selected":""}>cento</option><option value="kg" ${u==="kg"?"selected":""}>kg</option></select></div>`;
+function addLinha(){const L=$("m-linhas");if(L.children.length>=4)return;L.insertAdjacentHTML("beforeend",linhaHTML(L.children.length+1));if(L.children.length>=4)$("m-mais").hidden=true}
+addLinha(); addLinha();
+$("m-mais").onclick=()=>{addLinha();$("m-linhas").lastElementChild.querySelector("input").focus()};
+$("m-ver").onclick=()=>{
+  const itens=[...$("m-linhas").children].map((r,i)=>{
+    const nome=r.querySelector("[data-campo=nome]").value.replace(/\s+/g," ").trim();
+    const pt=r.querySelector("[data-campo=preco]").value.replace(/[^\d,\.]/g,"").replace(/\.(?=\d{3}\b)/g,"").replace(",",".");
+    const pr=parseFloat(pt); const un=r.querySelector("[data-campo=un]").value;
+    return nome?{id:"m"+i,nome,desc:"Do cardápio da sua loja.",preco:isFinite(pr)&&pr>0?Math.round(pr*100)/100:null,un,tag:i===0?"Mais pedido":pr>0?"Novo":"Sob consulta",cor:CORES[i%CORES.length]}:null;
+  }).filter(Boolean);
+  if(!itens.length){$("m-erro").textContent="Escreva o nome de pelo menos um produto.";$("m-erro").hidden=false;$("m-linhas").querySelector("input").focus();return}
+  $("m-erro").hidden=true;
+  const loja=$("m-loja").value.replace(/\s+/g," ").trim()||LOJA||"Sua loja";
+  CARDAPIOS.Meus={loja,itens}; s.provou.meus=1; s.provou.card=1;
+  if(!$("negocio").value) $("negocio").value=loja;
+  trocarSeg("Meus"); marcarInteresses();
+  $("meus").open=false;
+  toast("Pronto! Esse é o seu cardápio no Moppa.");
+  setTimeout(()=>$("reels").closest(".fone").scrollIntoView({behavior:reduz?"auto":"smooth",block:"center"}),150);
+};
+
+/* Reels */
+function renderReels(){
+  const L=prods(), nome=lojaNome();
+  $("reels").innerHTML=L.map((p,i)=>`
+    <article class="reel" style="background:radial-gradient(circle at 50% 30%, ${p.cor[0]}, ${p.cor[1]})">
+      <span class="forma" aria-hidden="true"></span>
+      <div class="topinho"><span class="loja"><i>${esc(nome[0].toUpperCase())}</i><span>${esc(nome)}</span></span><span class="cont">${i+1}/${L.length}</span></div>
+      ${i===0&&L.length>1?`<span class="dica">deslize para cima ↑</span>`:""}
+      <span class="tag">${esc(p.tag)}</span>
+      <b>${esc(p.nome)}</b>
+      <span class="desc">${esc(p.desc)}</span>
+      <div class="linha">
+        <span class="preco" id="pr-${p.id}">${preco(p)==null?"Sob consulta":`${brl(preco(p))} <small>${unTxt(p.un)}</small>`}</span>
+        <button class="add ${s.sacola[p.id]?"ok":""}" data-add="${p.id}" aria-label="Adicionar ${esc(p.nome)}">${s.sacola[p.id]?`✓ ${s.sacola[p.id]}`:"+ Adicionar"}</button>
+      </div>
+    </article>`).join("");
+  $("reels").querySelectorAll("[data-add]").forEach(b=>b.onclick=()=>{
+    const id=b.dataset.add; s.sacola[id]=(s.sacola[id]||0)+1;
+    b.classList.add("ok"); b.textContent=`✓ ${s.sacola[id]}`; renderSacola();
+    const r=$("reels"), idx=L.findIndex(p=>p.id===id);
+    if(s.sacola[id]===1 && idx<L.length-1) setTimeout(()=>r.scrollTo({top:r.clientHeight*(idx+1),behavior:reduz?"auto":"smooth"}),400);
+  });
+}
+function itensSacola(){return prods().filter(p=>s.sacola[p.id]).map(p=>({id:p.id,nome:p.nome,un:p.un,q:s.sacola[p.id],unit:preco(p)}))}
+const totalDe=it=>it.reduce((t,i)=>t+(i.unit?i.unit*i.q:0),0);
+function renderSacola(){
+  const it=itensSacola();
+  $("sacola").innerHTML=it.length?`
+    ${it.map(i=>`<div class="it"><span>${i.q}× ${esc(i.nome)}</span><span>${i.unit?brl(i.unit*i.q):"a definir"}</span></div>`).join("")}
+    <div class="tot"><span>Total estimado</span><span>${brl(totalDe(it))}</span></div>
+    <button class="btn p" id="enviar">Enviar pedido para ${esc(lojaNome())}</button>`:
+    `<p class="vazio">Toque em “+ Adicionar” nos produtos do celular.</p>`;
+  const e=$("enviar"); if(e) e.onclick=enviarPedido;
+  if(typeof atualizar==="function"&&$("resumo")) atualizar();
+}
+
+/* Pedido */
+function enviarPedido(){
+  const it=itensSacola();
+  s.pedido={codigo:"ORC-2026-0148",status:"solicitado",loja:lojaNome(),versoes:[{itens:it,quando:agora()}],hist:[{t:agora(),txt:"Chegou pelo cardápio. Preços puxados da tabela."}]};
+  s.verVersao=0; s.sacola={}; s.provou.card=1;
+  feito.add(1); renderReels(); renderSacola(); renderPainel(); renderPreco(); marcarInteresses();
+  toast("Pedido enviado. Agora veja o lado da empresa.");
+  setTimeout(()=>mostrar(2),reduz?0:700);
+}
+const ROT={solicitado:"Solicitado",enviado:"Proposta enviada",alteracao:"Alteração pedida",aprovado:"Aprovado",producao:"Em produção"};
+function renderPainel(){
+  const P=s.pedido;
+  const outros=`<div class="lista" aria-label="Outros pedidos de exemplo">
+      <div class="outro"><span><span class="cod" style="font-size:12px">ORC-2026-0147</span> · Rafael · 100 coxinhas</span><span class="pill enviado">Proposta enviada</span></div>
+      <div class="outro"><span><span class="cod" style="font-size:12px">PED-2026-0146</span> · Ana Paula · bolo 2 kg</span><span class="pill producao">Em produção</span></div></div>`;
+  if(!P){$("painel").innerHTML=`<div class="barra"><b>Painel · ${esc(lojaNome())}</b><span>0 novos</span></div><div class="corpo"><p class="vazio">Monte uma sacola na etapa 1 e envie. O pedido aparece aqui.</p>${outros}</div>`;return}
+  const vi=s.verVersao??P.versoes.length-1, V=P.versoes[vi], ant=P.versoes[vi-1];
+  const mudou=id=>ant&&(ant.itens.find(x=>x.id===id)?.q!==V.itens.find(x=>x.id===id)?.q);
+  const cod=P.status==="producao"?"PED-2026-0148":P.codigo;
+  let acoes="";
+  if(P.status==="solicitado") acoes=`<p class="lado">Você (empresa)</p><button class="btn p" data-a="enviar">Conferir e enviar proposta</button>`;
+  else if(P.status==="enviado") acoes=`<p class="lado">O cliente, pelo link</p><button class="btn v" data-a="aprovar">Cliente aprova</button><button class="btn c" data-a="alterar">Cliente pede alteração</button>`;
+  else if(P.status==="alteracao") acoes=`<p class="lado">Você (empresa)</p><button class="btn p" data-a="v2">Criar nova versão e reenviar</button>`;
+  else if(P.status==="aprovado") acoes=`<p class="lado">Você (empresa)</p><button class="btn p" data-a="produzir">Gerar pedido de produção</button>`;
+  else acoes=`<div class="fechou">Ciclo completo: do cardápio à produção, com um código só. Agora, a etapa 3.</div><button type="button" class="btn p" data-ir="3">Próximo: mude um preço →</button>`;
+  $("painel").innerHTML=`
+    <div class="barra"><b>Painel · ${esc(P.loja)}</b><span>${P.status==="solicitado"?"1 novo":"Orçamentos"}</span></div>
+    <div class="corpo">
+      ${P.status==="solicitado"?`<div class="notif"><span class="ic" aria-hidden="true"></span><div><b>Nova solicitação pelo cardápio</b><small>${V.itens.length} ${V.itens.length>1?"itens":"item"} · ${P.versoes[0].quando}</small></div></div>`:""}
+      <div class="cab"><span class="cod">${cod}</span><span class="pill ${P.status}">${ROT[P.status]}</span></div>
+      <div class="meta"><span>canal: cardápio</span><span>versão ${vi+1} de ${P.versoes.length}</span></div>
+      ${P.versoes.length>1?`<div class="vers" role="group" aria-label="Versões">${P.versoes.map((x,i)=>`<button data-v="${i}" class="${i===vi?"on":""}" aria-pressed="${i===vi}">v${i+1}</button>`).join("")}</div>`:""}
+      <div class="itens">${V.itens.map(i=>`<div class="${mudou(i.id)?"mud":""}"><span>${i.q}× ${esc(i.nome)}</span><span>${i.unit?brl(i.unit*i.q):"a definir"}</span></div>`).join("")}
+        <div style="border-top:1px dashed var(--areia);padding-top:6px;font-weight:600"><span>Total v${vi+1}</span><span>${brl(totalDe(V.itens))}</span></div></div>
+      <ul class="hist" aria-label="Histórico">${P.hist.map(h=>`<li><time>${h.t}</time><span>${esc(h.txt)}</span></li>`).join("")}</ul>
+      <div class="botoes">${acoes}</div>
+      ${outros}
+    </div>`;
+  $("painel").querySelectorAll("[data-v]").forEach(b=>b.onclick=()=>{s.verVersao=+b.dataset.v;renderPainel()});
+  $("painel").querySelectorAll("[data-a]").forEach(b=>b.onclick=()=>acao(b.dataset.a));
+}
+function acao(a){
+  const P=s.pedido, last=P.versoes[P.versoes.length-1];
+  if(a==="enviar"){P.status="enviado";P.hist.push({t:agora(),txt:`Proposta v${P.versoes.length} enviada ao cliente por link.`});s.provou.orc=1;}
+  if(a==="alterar"){P.status="alteracao";P.hist.push({t:agora(),txt:`Cliente pediu: “aumenta 1 no ${last.itens[0].nome.toLowerCase()}”.`});}
+  if(a==="v2"){const it=last.itens.map((x,i)=>i===0?{...x,q:x.q+1}:{...x});P.versoes.push({itens:it,quando:agora()});P.status="enviado";s.verVersao=null;s.provou.ver=1;
+    P.hist.push({t:agora(),txt:`Versão ${P.versoes.length} criada no mesmo código e reenviada.`});}
+  if(a==="aprovar"){P.status="aprovado";P.hist.push({t:agora(),txt:`Cliente aprovou a versão ${P.versoes.length} pelo link.`});}
+  if(a==="produzir"){P.status="producao";P.hist.push({t:agora(),txt:"Virou PED-2026-0148. A cozinha produz a versão aprovada."});feito.add(2);toast("Pedido de produção gerado.");}
+  renderPainel(); renderPreco(); marcarInteresses(); atualizar();
+}
+
+/* Preço */
+function renderPreco(){
+  const lista=prods().filter(p=>p.preco!=null);
+  if(!lista.length){$("precoBox").innerHTML=`<p class="vazio">Coloque o preço em pelo menos um dos seus produtos para testar esta parte.</p>`;return}
+  if(!s.alvoPreco||!lista.find(p=>p.id===s.alvoPreco)) s.alvoPreco=(s.pedido&&s.pedido.versoes.at(-1).itens.find(i=>i.unit&&lista.find(p=>p.id===i.id))?.id)||lista[0].id;
+  const p=lista.find(x=>x.id===s.alvoPreco), atual=preco(p);
+  const noPed=s.pedido?.versoes.at(-1).itens.find(i=>i.id===p.id);
+  const passo=atual>=500?50:atual>=100?5:1;
+  $("precoBox").innerHTML=`
+    <div class="campo"><label for="alvo">Produto</label><select id="alvo">${lista.map(x=>`<option value="${x.id}" ${x.id===p.id?"selected":""}>${esc(x.nome)}</option>`).join("")}</select></div>
+    <div class="ajuste">
+      <button data-d="-1" aria-label="Diminuir preço">−</button>
+      <div style="text-align:center"><span class="val">${brl(atual)}</span><br><span class="sub" style="font-size:13px">${unTxt(p.un)} na sua tabela</span></div>
+      <button data-d="1" aria-label="Aumentar preço">+</button>
+    </div>
+    <div class="compara">
+      <div class="b"><small>No cardápio, agora</small><b>${brl(atual)}</b></div>
+      <div class="a"><small>${noPed?`No ${s.pedido.status==="producao"?"PED":"ORC"}-2026-0148`:"Pedido já feito"}</small><b>${noPed?brl(noPed.unit):"—"}</b><small>${noPed?(noPed.unit!==atual?"preço da época, mantido":"mesmo preço"):"envie um pedido com este item"}</small></div>
+    </div>
+    <button class="btn c" id="verCard">Ver no cardápio</button>`;
+  $("alvo").onchange=e=>{s.alvoPreco=e.target.value;renderPreco()};
+  $("precoBox").querySelectorAll("[data-d]").forEach(b=>b.onclick=()=>{
+    s.precos[p.id]=Math.max(passo,preco(p)+(+b.dataset.d)*passo); s.provou.pre=1; feito.add(3); marcarInteresses(); atualizar();
+    renderPreco(); const el=$("pr-"+p.id); if(el){el.innerHTML=`${brl(preco(p))} <small>${unTxt(p.un)}</small>`;el.classList.remove("mudou");void el.offsetWidth;el.classList.add("mudou")}
+  });
+  $("verCard").onclick=()=>{const idx=prods().findIndex(x=>x.id===p.id);mostrar(1);setTimeout(()=>$("reels").scrollTo({top:$("reels").clientHeight*idx}),reduz?0:500)};
+}
+
+/* Orçamento */
+function marcarInteresses(){
+  [["card","i-card"],["orc","i-orc"],["ver","i-ver"],["pre","i-pre"]].forEach(([k,id])=>{if(s.provou[k]&&!$(id).dataset.mexeu)$(id).checked=true});
+}
+document.querySelectorAll("[name=int]").forEach(i=>i.addEventListener("change",()=>i.dataset.mexeu=1));
+const CH="moppa-orc-rascunho";
+try{const r=JSON.parse(localStorage.getItem(CH)||"{}");["nome","negocio","cidade","zap","obs"].forEach(k=>{if(r[k])$(k).value=r[k]})}catch(e){}
+if(LOJA&&!$("negocio").value) $("negocio").value=LOJA;
+$("form").addEventListener("input",()=>{try{localStorage.setItem(CH,JSON.stringify(Object.fromEntries(["nome","negocio","cidade","zap","obs"].map(k=>[k,$(k).value]))))}catch(e){}});
+$("form").addEventListener("submit",e=>{
+  e.preventDefault();
+  const v=id=>$(id).value.trim(), falta=[];
+  [["nome","seu nome"],["negocio","o nome do negócio"],["zap","seu WhatsApp com DDD"]].forEach(([id,txt])=>{
+    const ok=id==="zap"?v(id).replace(/\D/g,"").length>=10:!!v(id);
+    $(id).classList.toggle("invalido",!ok);$(id).setAttribute("aria-invalid",String(!ok));if(!ok)falta.push(txt)});
+  if(falta.length){$("erro").textContent="Falta preencher "+falta.join(", ").replace(/, ([^,]*)$/," e $1")+".";$("erro").hidden=false;
+    $(["nome","negocio","zap"].find(i=>$(i).classList.contains("invalido"))).focus();return}
+  $("erro").hidden=true;
+  const seg=document.querySelector("[name=segs2]:checked")?.value||s.segBase;
+  const ints=[...document.querySelectorAll("[name=int]:checked")].map(i=>i.value);
+  const partes=[];
+  if(s.provou.meus) partes.push("montei o cardápio com os meus produtos");
+  if(s.pedido) partes.push("fiz um pedido de teste");
+  if(s.provou.ver) partes.push("testei a alteração com nova versão");
+  if(s.pedido?.status==="producao") partes.push("gerei o pedido de produção");
+  const testou=partes.length?"Na demo: "+partes.join(", ")+".":null;
+  const meus=s.provou.meus?"Meus produtos: "+CARDAPIOS.Meus.itens.map(p=>p.nome+(p.preco?` (${brl(p.preco)} ${unTxt(p.un)})`:"")).join("; "):null;
+  const msg=["Olá! Quero um orçamento do Moppa.","","Nome: "+v("nome"),"Negócio: "+v("negocio")+" ("+seg+")",
+    v("cidade")?"Cidade: "+v("cidade"):null,"Encomendas por semana: "+v("volume"),ints.length?"Interesse: "+ints.join(", "):null,
+    "WhatsApp: "+v("zap"),testou,meus,v("obs")?"\n"+v("obs"):null].filter(x=>x!==null).join("\n");
+  const link="https://wa.me/"+WHATSAPP+"?text="+encodeURIComponent(msg);
+  $("pronto").innerHTML=`<div class="pronto">
+    <p class="eyebrow" style="color:var(--areia)">Pedido de orçamento pronto</p>
+    <h3 style="font-size:22px">Falta só enviar, ${esc(v("nome").split(" ")[0])}.</h3>
+    <div class="msg" id="msg-txt"></div>
+    <a class="btn t" href="${link}" target="_blank" rel="noopener">Enviar pelo WhatsApp</a>
+    <button class="btn c" type="button" id="copiar">Copiar mensagem</button>
+    <small>Se o WhatsApp não abrir, copie a mensagem e mande para ${WHATSAPP_EXIBIR}.</small></div>`;
+  feito.add(4); atualizar(); $("msg-txt").textContent=msg; $("pronto").hidden=false; $("form").hidden=true; $("pronto").scrollIntoView({block:"start"});
+  $("copiar").onclick=async ev=>{const b=ev.currentTarget;try{await navigator.clipboard.writeText(msg);b.textContent="Mensagem copiada"}
+    catch(err){const r=document.createRange();r.selectNodeContents($("msg-txt"));const sel=getSelection();sel.removeAllRanges();sel.addRange(r);b.textContent="Texto selecionado: copie pelo menu"}};
+});
+$("rever").onclick=()=>{const c=$("cena");c.classList.remove("play");void c.offsetWidth;c.classList.add("play")};
+renderSegs(); renderReels(); renderSacola(); renderPainel(); renderPreco(); atualizar();
+</script>
+</body>
+</html>
