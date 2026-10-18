@@ -232,7 +232,7 @@ footer .conteudo{display:flex;flex-wrap:wrap;justify-content:space-between;gap:1
       </div>
       <div class="palco" aria-hidden="true">
         <span class="q1"></span><span class="q2"></span>
-        <div class="fone"><video src="video/moppa-vertical.mp4" poster="video/moppa-vertical.jpg" autoplay muted loop playsinline preload="metadata"></video></div>
+        <div class="fone"><video src="moppa-vertical.mp4" poster="moppa-vertical.jpg" autoplay muted loop playsinline preload="metadata"></video></div>
       </div>
     </div>
   </section>
@@ -310,8 +310,8 @@ footer .conteudo{display:flex;flex-wrap:wrap;justify-content:space-between;gap:1
         <button role="tab" aria-selected="false" aria-controls="painel-video" id="aba-whats" data-v="whatsapp">Pelo WhatsApp</button>
       </div>
       <div class="tela-video" id="painel-video" role="tabpanel" aria-labelledby="aba-cardapio">
-        <video class="hor" id="v-hor" controls playsinline preload="metadata" poster="video/moppa-horizontal.jpg" src="video/moppa-horizontal.mp4"></video>
-        <video class="vert" id="v-vert" controls playsinline preload="metadata" poster="video/moppa-vertical.jpg" src="video/moppa-vertical.mp4"></video>
+        <video class="hor" id="v-hor" controls playsinline preload="metadata" poster="moppa-horizontal.jpg" src="moppa-horizontal.mp4"></video>
+        <video class="vert" id="v-vert" controls playsinline preload="metadata" poster="moppa-vertical.jpg" src="moppa-vertical.mp4"></video>
       </div>
       <p class="nota-video">Os vídeos não têm som: dá para assistir em qualquer lugar.</p>
     </div>
@@ -422,8 +422,8 @@ footer .conteudo{display:flex;flex-wrap:wrap;justify-content:space-between;gap:1
 </footer>
 
 <script>
-const VIDEOS={moppa:{h:"video/moppa-horizontal",v:"video/moppa-vertical",ph:"video/moppa-horizontal.jpg",pv:"video/moppa-vertical.jpg"},
-  whatsapp:{h:"video/whatsapp-horizontal",v:"video/whatsapp-vertical",ph:"video/whatsapp-horizontal.jpg",pv:"video/whatsapp-vertical.jpg"}};
+const VIDEOS={moppa:{h:"moppa-horizontal",v:"moppa-vertical",ph:"moppa-horizontal.jpg",pv:"moppa-vertical.jpg"},
+  whatsapp:{h:"whatsapp-horizontal",v:"whatsapp-vertical",ph:"whatsapp-horizontal.jpg",pv:"whatsapp-vertical.jpg"}};
 document.querySelectorAll(".abas button").forEach(b=>b.addEventListener("click",()=>{
   document.querySelectorAll(".abas button").forEach(x=>x.setAttribute("aria-selected",String(x===b)));
   document.getElementById("painel-video").setAttribute("aria-labelledby",b.id);
