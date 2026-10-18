@@ -16,7 +16,7 @@
 <meta property="og:locale" content="pt_BR">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="theme-color" content="#0f4c5c">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'%3E%3Crect width='26' height='26' rx='8' fill='%230f4c5c'/%3E%3Cpath d='M26 10 A16 16 0 0 0 10 26 L26 26Z' fill='%23c76e4b'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1024 1024'%3E%3Crect width='1024' height='1024' rx='228' fill='#1E322A'/%3E%3Cg transform='matrix%280.76607 0 0 0.76607 181.44 284.28%29'%3E%3Cpath d='M625 229.4 L781 100.8 Q797 83.6 797 103.6 L797 562 A60 60 0 0 1 737 622 L685 622 A60 60 0 0 1 625 562 Z' fill='#F3EEE6'/%3E%3Cpath d='M66 97 A62 62 0 0 1 128 35 L170 35 C205 35 228 51 250 66 L418 178 L418 262 C395 232 360 212 320 212 C272 212 236 240 235 300 L235 562 A60 60 0 0 1 175 622 L126 622 A60 60 0 0 1 66 562 Z' fill='#F3EEE6'/%3E%3Cpath d='M418 180 L645.9 -8.1 A85 85 0 0 1 754.1 123.1 L418 400 Z' fill='#C76E4B'/%3E%3C/g%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap">
@@ -58,6 +58,10 @@ p{margin:0}
 .topo{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .marca{display:flex;align-items:center;gap:8px;font-weight:600;font-size:18px;color:var(--petroleo)}
 .topo a{font-size:14px;font-weight:500}
+.logo{display:inline-flex;line-height:0}
+.logo svg{height:30px;width:auto;display:block;overflow:visible}
+.logo-pe{justify-content:center}
+.logo-pe svg{height:24px}
 .para{align-self:flex-start;display:inline-flex;align-items:center;gap:8px;background:var(--branco);border:1px solid var(--areia);border-radius:999px;padding:6px 14px 6px 6px;font-size:14px}
 .para i{width:26px;height:26px;border-radius:50%;background:var(--terracota);color:#fff;display:grid;place-items:center;font-style:normal;font-weight:600;font-size:13px}
 .para b{font-weight:600;color:var(--petroleo)}
@@ -253,7 +257,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 /* Computador: ocupa a tela */
 @media (min-width:960px){
   .wrap{max-width:1180px;gap:88px;padding-block:28px 56px}
-  .topo .marca{font-size:22px}
+  .topo .logo svg{height:38px}
   .hero{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:64px;align-items:center}
   .hero .cena{order:2;height:460px;border-radius:36px}
   .hero .hero-txt{order:1}
@@ -286,9 +290,10 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><symbol id="moppa-m" viewBox="66 -27.5 731 649.5"><path d="M625 229.4 L781 100.8 Q797 83.6 797 103.6 L797 562 A60 60 0 0 1 737 622 L685 622 A60 60 0 0 1 625 562 Z" fill="var(--logo-m,#1E322A)"/><path d="M66 97 A62 62 0 0 1 128 35 L170 35 C205 35 228 51 250 66 L418 178 L418 262 C395 232 360 212 320 212 C272 212 236 240 235 300 L235 562 A60 60 0 0 1 175 622 L126 622 A60 60 0 0 1 66 562 Z" fill="var(--logo-m,#1E322A)"/><path d="M418 180 L645.9 -8.1 A85 85 0 0 1 754.1 123.1 L418 400 Z" fill="var(--logo-f,#C76E4B)"/></symbol></svg>
 <div class="wrap">
   <header class="topo">
-    <span class="marca"><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><rect width="26" height="26" rx="8" fill="#0f4c5c"/><path d="M26 10 A16 16 0 0 0 10 26 L26 26Z" fill="#c76e4b"/></svg>moppa</span>
+    <span class="logo" role="img" aria-label="Moppa"><svg viewBox="0 0 3251 874" aria-hidden="true"><use href="#moppa-m" x="0" y="0" width="731" height="649.5"/><text x="811" y="649.5" font-family="Jost, system-ui, sans-serif" font-weight="600" font-size="1017" textLength="2440" lengthAdjust="spacing" fill="var(--logo-m,#1E322A)">oppa</text></svg></span>
     <a href="#orc">Pedir orçamento</a>
   </header>
 
@@ -411,7 +416,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
   </section>
 
   <footer>
-    <span class="marca" style="justify-content:center"><svg width="20" height="20" viewBox="0 0 26 26" aria-hidden="true"><rect width="26" height="26" rx="8" fill="#0f4c5c"/><path d="M26 10 A16 16 0 0 0 10 26 L26 26Z" fill="#c76e4b"/></svg>moppa</span>
+    <span class="logo logo-pe" role="img" aria-label="Moppa"><svg viewBox="0 0 3251 874" aria-hidden="true"><use href="#moppa-m" x="0" y="0" width="731" height="649.5"/><text x="811" y="649.5" font-family="Jost, system-ui, sans-serif" font-weight="600" font-size="1017" textLength="2440" lengthAdjust="spacing" fill="var(--logo-m,#1E322A)">oppa</text></svg></span>
     <span>Conte. Calcule. Conquiste.</span>
   </footer>
 </div>
